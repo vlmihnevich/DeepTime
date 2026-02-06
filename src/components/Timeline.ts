@@ -99,7 +99,7 @@ export class Timeline {
     const maxLane = this.speciesArr.reduce((m, s) => Math.max(m, s._lane || 0), 0);
     const spBottom = this.spY + (maxLane + 1) * (SP_LANE + SP_GAP);
     this.axisY = this.iH - 10;
-    this.evtY = spBottom + 12;
+    this.evtY = Math.round((spBottom + 12 + this.axisY) / 2);
     this.evtH = this.axisY - this.evtY;
   }
 
