@@ -20,7 +20,7 @@ export class Grid {
     sel.enter().append("line").attr("class", "grid-line").merge(sel)
       .attr("x1", (d) => lin(d)).attr("x2", (d) => lin(d))
       .attr("y1", 0).attr("y2", this.axisY)
-      .attr("stroke", "#111822").attr("stroke-width", 0.5);
+      .attr("stroke", "#141a24").attr("stroke-width", 0.5);
     sel.exit().remove();
   }
 }

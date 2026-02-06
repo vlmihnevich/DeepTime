@@ -15,8 +15,8 @@ export class YouAreHere {
     this.g.selectAll("*").remove();
     const grp = this.g.append("g").attr("class", "yah").attr("transform", `translate(${ctx.xScale(0)},0)`);
     grp.append("circle").attr("class", "you-are-here-pulse").attr("cy", this.eonH / 2);
-    grp.append("circle").attr("cy", this.eonH / 2).attr("r", 5).attr("fill", "#4fc3f7");
-    grp.append("text").attr("y", -6).attr("text-anchor", "end").attr("fill", "#4fc3f7")
+    grp.append("circle").attr("cy", this.eonH / 2).attr("r", 5).attr("fill", "#d4a54a");
+    grp.append("text").attr("y", -6).attr("text-anchor", "end").attr("fill", "#d4a54a")
       .attr("font-size", "10px").attr("font-weight", "700").text(t("youAreHere"));
   }
 }

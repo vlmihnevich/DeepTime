@@ -18,8 +18,8 @@ export class Axis {
         .tickFormat((d) => formatMa(Math.abs(d.valueOf())))
         .ticks(Math.min(14, Math.max(4, Math.floor(ctx.iW / 110)))),
     );
-    this.g.selectAll("text").attr("fill", "#506070");
-    this.g.selectAll("line, path").attr("stroke", "#1e2a38");
+    this.g.selectAll("text").attr("fill", "#5a6472");
+    this.g.selectAll("line, path").attr("stroke", "#1c2430");
   }
 
   updateY(axisY: number): void {

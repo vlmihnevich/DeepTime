@@ -29,7 +29,7 @@ export class Extinctions {
       .attr("y", 0)
       .attr("width", bw)
       .attr("height", this.axisY)
-      .attr("fill", "#FF1744")
+      .attr("fill", "#e03e3e")
       .attr("opacity", (d) => ((d.severity || 50) / 100) * 0.28)
       .attr("rx", bw / 3)
       .attr("filter", "url(#glow)")
