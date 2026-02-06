@@ -1,5 +1,5 @@
 import { N, Desc, Wiki, t } from "../i18n";
-import { formatMa, formatDuration, to24Hour } from "../utils/format";
+import { formatMa, formatDuration, to24Hour, formatDuration24 } from "../utils/format";
 import type { GeoItem, KeyEvent, Species } from "../types";
 
 type PanelItem = GeoItem | KeyEvent | Species;
@@ -35,7 +35,7 @@ export class InfoPanel {
       const item = d as GeoItem | Species;
       this.datesEl.textContent = `${formatMa(item.start)} → ${formatMa(item.end)}`;
       this.durationEl.textContent = `${t("duration")}: ${formatDuration(item.start, item.end)}`;
-      this.perspEl.innerHTML = `<strong>${t("clock24")}:</strong> ${t("clockSpan")} <strong>${to24Hour(item.start)}</strong> ${t("to")} <strong>${to24Hour(item.end)}</strong>.`;
+      this.perspEl.innerHTML = `<strong>${t("clock24")}:</strong> ${t("clockSpan")} <strong>${to24Hour(item.start)}</strong> ${t("to")} <strong>${to24Hour(item.end)}</strong> (${formatDuration24(item.start, item.end)}).`;
     } else {
       const item = d as KeyEvent;
       this.datesEl.textContent = formatMa(item.date);

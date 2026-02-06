@@ -82,7 +82,8 @@ export class Events {
       .attr("cy", this.evtY).attr("r", (d) => (MAJOR_EVENT_NAMES.has(d.name) ? 5 : 3.5))
       .attr("fill", ecol).attr("stroke", "#0c1018").attr("stroke-width", 1.5);
     all.select<SVGTextElement>(".event-text")
-      .attr("x", 6).attr("y", (d) => this.evtY + 14 + d._row * 15)
+      .attr("x", 0).attr("y", (d) => this.evtY - 8 - d._row * 15)
+      .attr("text-anchor", "middle")
       .attr("fill", ecol)
       .attr("font-size", "14px")
       .attr("font-weight", "600")

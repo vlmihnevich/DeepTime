@@ -24,3 +24,15 @@ export function to24Hour(ma: number): string {
   if (ma < 0.001) return `${h}:${m}:${s}.${String(Math.round((sec % 1) * 1000)).padStart(3, "0")}`;
   return `${h}:${m}:${s}`;
 }
+
+export function formatDuration24(startMa: number, endMa: number): string {
+  const totalSec = ((startMa - endMa) / 4540) * 86400;
+  const h = Math.floor(totalSec / 3600);
+  const m = Math.floor((totalSec % 3600) / 60);
+  const s = Math.floor(totalSec % 60);
+  const parts: string[] = [];
+  if (h > 0) parts.push(`${h}${t("clockH")}`);
+  if (m > 0) parts.push(`${m}${t("clockM")}`);
+  if (s > 0 || parts.length === 0) parts.push(`${s}${t("clockS")}`);
+  return parts.join(" ");
+}

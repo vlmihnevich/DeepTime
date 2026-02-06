@@ -2,7 +2,7 @@ type LangKey =
   | "title" | "hadean" | "archean" | "proterozoic" | "phanerozoic"
   | "reset" | "viewing" | "fullTimeline" | "annotation" | "wikiLink"
   | "youAreHere" | "duration" | "severity" | "speciesLost"
-  | "clock24" | "clockSpan" | "clockAt" | "to" | "present"
+  | "clock24" | "clockSpan" | "clockAt" | "clockH" | "clockM" | "clockS" | "to" | "present"
   | "ga" | "ma" | "ka" | "yearsAgo"
   | "bilYears" | "milYears" | "thouYears" | "years"
   | "kbZoom" | "kbPan" | "kbReset";
@@ -23,6 +23,7 @@ const UI: Record<string, UIStrings> = {
     clock24: "24-hour clock",
     clockSpan: "If Earth's history were 24 hours, this spans",
     clockAt: "If Earth's history were 24 hours, this happens at",
+    clockH: "h", clockM: "m", clockS: "s",
     to: "to",
     present: "Present",
     ga: "Ga", ma: "Ma", ka: "Ka", yearsAgo: "years ago",
@@ -42,6 +43,7 @@ const UI: Record<string, UIStrings> = {
     clock24: "24-часовые часы",
     clockSpan: "Если бы история Земли уместилась в 24 часа, это длится с",
     clockAt: "Если бы история Земли уместилась в 24 часа, это происходит в",
+    clockH: "ч", clockM: "м", clockS: "с",
     to: "до",
     present: "Наше время",
     ga: "млрд л.н.", ma: "млн л.н.", ka: "тыс. л.н.", yearsAgo: "лет назад",
