@@ -52,7 +52,7 @@ const UI: Record<string, UIStrings> = {
   },
 };
 
-let LANG = "en";
+let LANG = new URLSearchParams(window.location.search).get("lang") === "ru" ? "ru" : "en";
 
 export function getLang(): string {
   return LANG;

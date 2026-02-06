@@ -14,7 +14,7 @@ import { SpeciesBars } from "./SpeciesBars";
 import { Tooltip } from "./Tooltip";
 import { InfoPanel } from "./InfoPanel";
 import { NavBar } from "./NavBar";
-import { t } from "../i18n";
+import { t, getLang } from "../i18n";
 
 const MARGIN = { top: 16, right: 30, bottom: 40, left: 30 };
 const EON_H = 50, ERA_H = 34, PER_H = 26, GAP = 3;
@@ -54,6 +54,7 @@ export class Timeline {
 
   private annotation: HTMLElement;
   private kbHint: HTMLElement;
+  private urlUpdateTimer: number | null = null;
 
   constructor() {
     this.container = document.getElementById("timeline-container")!;
@@ -159,10 +160,35 @@ export class Timeline {
         this.updateAll();
         this.annotation.classList.toggle("hidden", this.curT.k > 1.3);
         if (this.curT.k > 1.1) this.kbHint.style.opacity = "0";
+        this.updateUrl();
       });
 
     this.svg.call(this.zoom);
     this.svg.on("click", () => this.infoPanel.close());
+
+    this.restoreStateFromUrl();
+  }
+
+  private restoreStateFromUrl(): void {
+    const params = new URLSearchParams(window.location.search);
+    const x = parseFloat(params.get("x") || "");
+    const k = parseFloat(params.get("k") || "");
+
+    if (!isNaN(x) && !isNaN(k)) {
+      const transform = d3.zoomIdentity.translate(x, 0).scale(k);
+      this.svg.call(this.zoom.transform, transform);
+    }
+  }
+
+  private updateUrl(): void {
+    if (this.urlUpdateTimer) window.clearTimeout(this.urlUpdateTimer);
+    this.urlUpdateTimer = window.setTimeout(() => {
+      const url = new URL(window.location.href);
+      url.searchParams.set("x", this.curT.x.toFixed(2));
+      url.searchParams.set("k", this.curT.k.toFixed(2));
+      url.searchParams.set("lang", getLang());
+      window.history.replaceState(null, "", url.toString());
+    }, 500);
   }
 
   private ctx(): RenderContext {
@@ -201,6 +227,7 @@ export class Timeline {
     this.annotation.innerHTML = t("annotation");
     this.kbHint.innerHTML = `<kbd>+</kbd><kbd>-</kbd> ${t("kbZoom")} &nbsp;<kbd>&larr;</kbd><kbd>&rarr;</kbd> ${t("kbPan")} &nbsp;<kbd>Home</kbd> ${t("kbReset")} &nbsp;<kbd>1</kbd>-<kbd>4</kbd>`;
     this.updateAll();
+    this.updateUrl();
   }
 
   private setupKeyboard(): void {
