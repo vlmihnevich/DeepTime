@@ -4,7 +4,8 @@ type LangKey =
   | "youAreHere" | "duration" | "severity" | "speciesLost"
   | "clock24" | "clockSpan" | "clockAt" | "to" | "present"
   | "ga" | "ma" | "ka" | "yearsAgo"
-  | "bilYears" | "milYears" | "thouYears" | "years";
+  | "bilYears" | "milYears" | "thouYears" | "years"
+  | "kbZoom" | "kbPan" | "kbReset";
 
 type UIStrings = Record<LangKey, string>;
 
@@ -26,6 +27,7 @@ const UI: Record<string, UIStrings> = {
     present: "Present",
     ga: "Ga", ma: "Ma", ka: "Ka", yearsAgo: "years ago",
     bilYears: "billion years", milYears: "million years", thouYears: "thousand years", years: "years",
+    kbZoom: "zoom", kbPan: "pan", kbReset: "reset",
   },
   ru: {
     title: "ИСТОРИЯ ЖИЗНИ",
@@ -44,6 +46,7 @@ const UI: Record<string, UIStrings> = {
     present: "Наше время",
     ga: "млрд л.н.", ma: "млн л.н.", ka: "тыс. л.н.", yearsAgo: "лет назад",
     bilYears: "млрд лет", milYears: "млн лет", thouYears: "тыс. лет", years: "лет",
+    kbZoom: "масштаб", kbPan: "сдвиг", kbReset: "сброс",
   },
 };
 

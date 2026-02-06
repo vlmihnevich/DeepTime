@@ -34,6 +34,11 @@ export class Events {
     this.axisY = axisY;
   }
 
+  updateY(evtY: number, axisY: number): void {
+    this.evtY = evtY;
+    this.axisY = axisY;
+  }
+
   render(ctx: RenderContext): void {
     const k = ctx.curT.k;
     const visible: EvtWithRow[] = this.data
@@ -56,7 +61,14 @@ export class Events {
     const ecol = (d: KeyEvent) => (d.type === "origin" ? "#4ec98a" : "#e0a040");
 
     const sel = this.g.selectAll<SVGGElement, EvtWithRow>(".event-marker").data(visible, (d) => d.name);
-    const ent = sel.enter().append("g").attr("class", "event-marker");
+    const ent = sel.enter().append("g").attr("class", "event-marker")
+      .on("mouseover", (ev: MouseEvent, d: EvtWithRow) => this.onHover(ev, d))
+      .on("mousemove", (ev: MouseEvent) => this.onMove(ev))
+      .on("mouseout", () => this.onLeave())
+      .on("click", (ev: MouseEvent, d: EvtWithRow) => {
+        ev.stopPropagation();
+        this.onClick(ev, d);
+      });
     ent.append("line").attr("class", "event-line");
     ent.append("circle").attr("class", "event-dot");
     ent.append("text").attr("class", "event-text");
@@ -79,14 +91,6 @@ export class Events {
         const nm = N(d);
         const len = k > 10 ? 30 : k > 3 ? 22 : 16;
         return nm.length > len ? nm.slice(0, len - 1) + "\u2026" : nm;
-      });
-
-    all.on("mouseover", (ev: MouseEvent, d: EvtWithRow) => this.onHover(ev, d))
-      .on("mousemove", (ev: MouseEvent) => this.onMove(ev))
-      .on("mouseout", () => this.onLeave())
-      .on("click", (ev: MouseEvent, d: EvtWithRow) => {
-        ev.stopPropagation();
-        this.onClick(ev, d);
       });
 
     sel.exit().remove();

@@ -36,14 +36,7 @@ export class GeoLayer {
     const ent = sel.enter().append("g").attr("class", this.cls);
     ent.append("rect").attr("class", "geo-bar");
     ent.append("text").attr("class", "geo-label");
-    const all = ent.merge(sel);
-
-    all.select<SVGRectElement>("rect")
-      .attr("x", (d) => xScale(d.start))
-      .attr("y", this.y)
-      .attr("width", (d) => Math.max(0, xScale(d.end) - xScale(d.start)))
-      .attr("height", this.h)
-      .attr("fill", (d) => d.color)
+    ent.select<SVGRectElement>("rect")
       .on("mouseover", (ev: MouseEvent, d: GeoItem) => this.onHover(ev, d))
       .on("mousemove", (ev: MouseEvent) => this.onMove(ev))
       .on("mouseout", () => this.onLeave())
@@ -51,6 +44,14 @@ export class GeoLayer {
         ev.stopPropagation();
         this.onClick(ev, d);
       });
+    const all = ent.merge(sel);
+
+    all.select<SVGRectElement>("rect")
+      .attr("x", (d) => xScale(d.start))
+      .attr("y", this.y)
+      .attr("width", (d) => Math.max(0, xScale(d.end) - xScale(d.start)))
+      .attr("height", this.h)
+      .attr("fill", (d) => d.color);
 
     all.select<SVGTextElement>("text")
       .attr("x", (d) => {

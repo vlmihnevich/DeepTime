@@ -10,6 +10,10 @@ export class Grid {
     this.axisY = axisY;
   }
 
+  updateY(axisY: number): void {
+    this.axisY = axisY;
+  }
+
   render(ctx: RenderContext): void {
     const vl = ctx.xScale.invert(0);
     const vr = ctx.xScale.invert(ctx.iW);

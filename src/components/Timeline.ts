@@ -199,6 +199,7 @@ export class Timeline {
   private updateLangUI(): void {
     this.navBar.updateLangUI();
     this.annotation.innerHTML = t("annotation");
+    this.kbHint.innerHTML = `<kbd>+</kbd><kbd>-</kbd> ${t("kbZoom")} &nbsp;<kbd>&larr;</kbd><kbd>&rarr;</kbd> ${t("kbPan")} &nbsp;<kbd>Home</kbd> ${t("kbReset")} &nbsp;<kbd>1</kbd>-<kbd>4</kbd>`;
     this.updateAll();
   }
 
@@ -231,6 +232,9 @@ export class Timeline {
       this.xBase.range([0, this.iW]);
       this.svg.select("#clip rect").attr("width", this.iW).attr("height", this.iH + MARGIN.top + MARGIN.bottom);
       this.axis.updateY(this.axisY);
+      this.grid.updateY(this.axisY);
+      this.extinctions.updateY(this.axisY);
+      this.events.updateY(this.evtY, this.axisY);
       this.zoom
         .translateExtent([[0, -10], [this.iW, this.iH + 10]])
         .extent([[0, 0], [this.iW, this.iH]]);

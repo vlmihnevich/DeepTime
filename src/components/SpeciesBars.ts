@@ -1,5 +1,6 @@
 import * as d3 from "d3";
 import { N } from "../i18n";
+import { contrastColor } from "../utils/color";
 import type { Species, RenderContext } from "../types";
 
 export class SpeciesBars {
@@ -28,10 +29,15 @@ export class SpeciesBars {
   }
 
   render(ctx: RenderContext): void {
-    const k = ctx.curT.k;
-
     const sel = this.g.selectAll<SVGGElement, Species>(".sp-group").data(this.data, (d) => d.name);
-    const ent = sel.enter().append("g").attr("class", "sp-group");
+    const ent = sel.enter().append("g").attr("class", "sp-group")
+      .on("mouseover", (ev: MouseEvent, d: Species) => this.onHover(ev, d))
+      .on("mousemove", (ev: MouseEvent) => this.onMove(ev))
+      .on("mouseout", () => this.onLeave())
+      .on("click", (ev: MouseEvent, d: Species) => {
+        ev.stopPropagation();
+        this.onClick(ev, d);
+      });
     ent.append("rect").attr("class", "species-bar");
     ent.append("text").attr("class", "species-label");
 
@@ -52,6 +58,7 @@ export class SpeciesBars {
         return visL + 5;
       })
       .attr("y", (d) => this.spY + (d._lane || 0) * (this.spLane + this.spGap) + this.spLane / 2)
+      .attr("fill", (d) => contrastColor(d.color))
       .text((d) => {
         const nm = N(d);
         const visL = Math.max(0, ctx.xScale(d.start));
@@ -64,14 +71,6 @@ export class SpeciesBars {
       .attr("font-size", "13px")
       .attr("dominant-baseline", "central")
       .attr("opacity", 1);
-
-    all.on("mouseover", (ev: MouseEvent, d: Species) => this.onHover(ev, d))
-      .on("mousemove", (ev: MouseEvent) => this.onMove(ev))
-      .on("mouseout", () => this.onLeave())
-      .on("click", (ev: MouseEvent, d: Species) => {
-        ev.stopPropagation();
-        this.onClick(ev, d);
-      });
 
     sel.exit().remove();
   }
