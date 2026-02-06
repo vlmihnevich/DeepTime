@@ -47,11 +47,20 @@ export class GeoLayer {
     const all = ent.merge(sel);
 
     all.select<SVGRectElement>("rect")
-      .attr("x", (d) => xScale(d.start))
+      .attr("x", (d) => Math.max(-2000, xScale(d.start)))
       .attr("y", this.y)
-      .attr("width", (d) => Math.max(0, xScale(d.end) - xScale(d.start)))
+      .attr("width", (d) => {
+        const x1 = Math.max(-2000, xScale(d.start));
+        const x2 = Math.min(iW + 2000, xScale(d.end));
+        return Math.max(0, x2 - x1);
+      })
       .attr("height", this.h)
-      .attr("fill", (d) => d.color);
+      .attr("fill", (d) => d.color)
+      .style("display", (d) => {
+        const x1 = xScale(d.start);
+        const x2 = xScale(d.end);
+        return x2 < 0 || x1 > iW ? "none" : null;
+      });
 
     all.select<SVGTextElement>("text")
       .attr("x", (d) => {

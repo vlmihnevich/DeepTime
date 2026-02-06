@@ -45,14 +45,23 @@ export class SpeciesBars {
 
     const all = ent.merge(sel);
     all.select<SVGRectElement>("rect")
-      .attr("x", (d) => ctx.xScale(d.start))
+      .attr("x", (d) => Math.max(-2000, ctx.xScale(d.start)))
       .attr("y", (d) => this.spY + (d._lane || 0) * (this.spLane + this.spGap))
-      .attr("width", (d) => Math.max(4, ctx.xScale(d.end) - ctx.xScale(d.start)))
+      .attr("width", (d) => {
+        const x1 = Math.max(-2000, ctx.xScale(d.start));
+        const x2 = Math.min(ctx.iW + 2000, ctx.xScale(d.end));
+        return Math.max(0, x2 - x1);
+      })
       .attr("height", this.spLane)
       .attr("fill", (d) => d.color)
       .attr("opacity", 1)
       .attr("stroke", "rgba(255,255,255,0.1)")
-      .attr("stroke-width", 0.5);
+      .attr("stroke-width", 0.5)
+      .style("display", (d) => {
+        const x1 = ctx.xScale(d.start);
+        const x2 = ctx.xScale(d.end);
+        return x2 < 0 || x1 > ctx.iW ? "none" : null;
+      });
 
     all.select<SVGTextElement>("text")
       .attr("x", (d) => {
