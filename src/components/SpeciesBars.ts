@@ -51,7 +51,7 @@ export class SpeciesBars {
       .attr("height", this.spLane)
       .attr("fill", (d) => d.color)
       .attr("opacity", 1)
-      .attr("stroke", "rgba(255,255,255,0.08)")
+      .attr("stroke", "rgba(255,255,255,0.1)")
       .attr("stroke-width", 0.5);
 
     all.select<SVGTextElement>("text")
@@ -67,10 +67,10 @@ export class SpeciesBars {
         const visR = Math.min(ctx.iW, ctx.xScale(d.end));
         const visPx = visR - visL;
         if (visPx < 35) return "";
-        if (visPx < 70) return nm.slice(0, 6) + (nm.length > 6 ? "\u2026" : "");
+        if (visPx < 85) return nm.slice(0, 6) + (nm.length > 6 ? "\u2026" : "");
         return nm;
       })
-      .attr("font-size", "13px")
+      .attr("font-size", "15px")
       .attr("dominant-baseline", "central")
       .attr("opacity", 1);
 
@@ -82,7 +82,7 @@ export class SpeciesBars {
       .attr("y", (d) => this.spY + (d._lane || 0) * (this.spLane + this.spGap) + this.spLane / 2)
       .attr("fill", (d) => contrastColor(d.color))
       .attr("text-anchor", "end")
-      .attr("font-size", "11px")
+      .attr("font-size", "12px")
       .attr("dominant-baseline", "central")
       .attr("opacity", 1)
       .text((d) => {

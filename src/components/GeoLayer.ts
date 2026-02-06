@@ -61,15 +61,15 @@ export class GeoLayer {
       })
       .attr("y", this.y + this.h / 2)
       .attr("fill", (d) => contrastColor(d.color))
-      .style("font-size", this.h >= 40 ? "14px" : this.h >= 30 ? "13px" : "11px")
+      .style("font-size", this.h >= 40 ? "16px" : this.h >= 30 ? "14px" : "12px")
       .text((d) => {
         const nm = N(d);
         const visL = Math.max(0, xScale(d.start));
         const visR = Math.min(iW, xScale(d.end));
         const px = visR - visL;
-        if (px < 28) return "";
-        if (px < 55) return nm.slice(0, 4);
-        if (px < 90) return nm.length > 10 ? nm.slice(0, 9) + "\u2026" : nm;
+        if (px < 35) return "";
+        if (px < 65) return nm.slice(0, 4);
+        if (px < 110) return nm.length > 10 ? nm.slice(0, 9) + "\u2026" : nm;
         return nm;
       });
 

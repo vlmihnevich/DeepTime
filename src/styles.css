@@ -11,53 +11,53 @@
      Major second (1.125) — tight enough for data-dense UI,
      readable enough for long-form panel text.
      6 steps: caption → small → base → lead → title → display */
-  --fs-caption: 0.6875rem;
-  /* 11px — axis labels, keyboard hints */
-  --fs-small: 0.75rem;
-  /* 12px — buttons, badges, dates */
-  --fs-base: 1rem;
-  /* 14px — body text, descriptions */
-  --fs-lead: 1rem;
-  /* 16px — lead paragraphs, annotation body */
-  --fs-title: 1.125rem;
-  /* 18px — tooltip/section titles */
-  --fs-display: 1.3125rem;
-  /* 21px — panel headings */
+  --fs-caption: 0.75rem;
+  /* 12px — axis labels, keyboard hints */
+  --fs-small: 0.875rem;
+  /* 14px — buttons, badges, dates */
+  --fs-base: 1.0625rem;
+  /* 17px — body text, descriptions */
+  --fs-lead: 1.125rem;
+  /* 18px — lead paragraphs, annotation body */
+  --fs-title: 1.3125rem;
+  /* 21px — tooltip/section titles */
+  --fs-display: 1.5rem;
+  /* 24px — panel headings */
 
   /* Line-heights: tighter for large text, more air for small */
-  --lh-tight: 1.25;
+  --lh-tight: 1.2;
   --lh-normal: 1.5;
-  --lh-relaxed: 1.65;
+  --lh-relaxed: 1.6;
 
-  /* ─── Slate stone background tones ─── */
-  --bg-deep: #0c1018;
-  --bg-surface: rgba(12, 16, 24, 0.96);
-  --bg-elevated: rgba(16, 22, 34, 0.97);
+  /* ─── Cold primary tones (Deep Navy/Indigo) ─── */
+  --bg-deep: #0a0e14;
+  --bg-surface: rgba(10, 14, 20, 0.96);
+  --bg-elevated: rgba(18, 24, 34, 0.97);
 
   /* ─── Warm amber/gold accent system ─── */
-  --accent: #d4a54a;
-  --accent-bright: #e8c06a;
-  --accent-dim: rgba(212, 165, 74, 0.15);
-  --accent-border: rgba(212, 165, 74, 0.22);
-  --accent-glow: rgba(212, 165, 74, 0.08);
+  --accent: #ffb700;
+  --accent-bright: #ffd900;
+  --accent-dim: rgba(255, 183, 0, 0.12);
+  --accent-border: rgba(255, 183, 0, 0.25);
+  --accent-glow: rgba(255, 183, 0, 0.08);
 
-  /* ─── Text hierarchy ─── */
-  --text-primary: #e8e0d4;
-  --text-secondary: #a09888;
-  --text-muted: #6b6258;
-  --text-faint: #9f673a;
+  /* ─── Cold text hierarchy ─── */
+  --text-primary: #f0f4f8;
+  --text-secondary: #9fb3c8;
+  --text-muted: #627d98;
+  --text-faint: #486581;
 
   /* ─── Semantic colors ─── */
-  --extinction-red: #e03e3e;
-  --origin-green: #4ec98a;
-  --event-amber: #e0a040;
+  --extinction-red: #ff5252;
+  --origin-green: #40c057;
+  --event-amber: #fab005;
 
-  /* ─── Structural ─── */
-  --border-subtle: rgba(212, 165, 74, 0.12);
-  --border-medium: rgba(212, 165, 74, 0.25);
-  --grid-line: #141a24;
-  --axis-line: #1c2430;
-  --axis-text: #c0c8d4;
+  /* ─── Structural (Cool) ─── */
+  --border-subtle: rgba(255, 183, 0, 0.15);
+  --border-medium: rgba(255, 183, 0, 0.3);
+  --grid-line: #1a222e;
+  --axis-line: #2d3748;
+  --axis-text: #829ab1;
 
   /* ─── Font stacks ─── */
   --font-display: 'DM Sans', 'Segoe UI', system-ui, sans-serif;
@@ -128,28 +128,28 @@ body {
 .nav-btn:hover {
   background: var(--accent-dim);
   color: var(--text-primary);
-  border-color: rgba(212, 165, 74, 0.4);
+  border-color: var(--accent-border);
 }
 
 .nav-btn.active {
-  background: rgba(212, 165, 74, 0.2);
+  background: var(--accent-dim);
   color: var(--accent-bright);
   border-color: var(--accent);
 }
 
 .nav-btn.reset-btn {
-  background: rgba(224, 160, 64, 0.06);
-  border-color: rgba(224, 160, 64, 0.2);
+  background: rgba(250, 176, 5, 0.06);
+  border-color: rgba(250, 176, 5, 0.2);
   color: var(--event-amber);
 }
 
 .nav-btn.reset-btn:hover {
-  background: rgba(224, 160, 64, 0.15);
+  background: rgba(250, 176, 5, 0.15);
 }
 
 .nav-btn.lang-btn {
-  background: rgba(212, 165, 74, 0.1);
-  border-color: rgba(212, 165, 74, 0.3);
+  background: var(--accent-glow);
+  border-color: var(--accent-border);
   color: var(--accent);
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -157,7 +157,7 @@ body {
 }
 
 .nav-btn.lang-btn:hover {
-  background: rgba(212, 165, 74, 0.22);
+  background: var(--accent-dim);
 }
 
 #context-indicator {
@@ -263,7 +263,7 @@ body {
   z-index: 200;
   opacity: 0;
   transition: opacity .12s;
-  box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(212, 165, 74, 0.06);
+  box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.55), 0 0 0 1px var(--accent-glow);
 }
 
 #tooltip.visible {
@@ -536,6 +536,6 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(212, 165, 74, 0.12);
+  background: var(--accent-dim);
   border-radius: 0.1875rem;
 }

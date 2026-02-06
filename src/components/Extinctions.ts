@@ -42,7 +42,7 @@ export class Extinctions {
       .attr("y", 0)
       .attr("width", bw)
       .attr("height", this.axisY)
-      .attr("fill", "#e03e3e")
+      .attr("fill", "var(--extinction-red)")
       .attr("opacity", (d) => ((d.severity || 50) / 100) * 0.28)
       .attr("rx", bw / 3);
     sel.exit().remove();

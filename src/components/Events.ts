@@ -60,7 +60,7 @@ export class Events {
 
     const ecol = (d: KeyEvent) => {
       if (d.type === "human") return "#5dade2";
-      return d.type === "origin" ? "#4ec98a" : "#e0a040";
+      return d.type === "origin" ? "var(--origin-green)" : "var(--event-amber)";
     };
 
     const sel = this.g.selectAll<SVGGElement, EvtWithRow>(".event-marker").data(visible, (d) => d.name);
@@ -83,12 +83,12 @@ export class Events {
       .attr("stroke", ecol).attr("opacity", 0.18);
     all.select<SVGCircleElement>(".event-dot")
       .attr("cy", this.evtY).attr("r", (d) => (MAJOR_EVENT_NAMES.has(d.name) ? 5 : 3.5))
-      .attr("fill", ecol).attr("stroke", "#0c1018").attr("stroke-width", 1.5);
+      .attr("fill", ecol).attr("stroke", "var(--bg-deep)").attr("stroke-width", 1.5);
     all.select<SVGTextElement>(".event-text")
-      .attr("x", 0).attr("y", (d) => this.evtY - 8 - d._row * 15)
+      .attr("x", 0).attr("y", (d) => this.evtY - 8 - d._row * 18)
       .attr("text-anchor", "middle")
       .attr("fill", ecol)
-      .attr("font-size", "14px")
+      .attr("font-size", "16px")
       .attr("font-weight", "600")
       .attr("opacity", (d) => (MAJOR_EVENT_NAMES.has(d.name) ? 0.9 : 0.7))
       .text((d) => {
