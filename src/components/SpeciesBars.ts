@@ -35,7 +35,7 @@ export class SpeciesBars {
       .on("mouseover", (ev: MouseEvent, d: Species) => this.onHover(ev, d))
       .on("mousemove", (ev: MouseEvent) => this.onMove(ev))
       .on("mouseout", () => this.onLeave())
-      .on("click", (ev: MouseEvent, d: Species) => {
+      .on("dblclick", (ev: MouseEvent, d: Species) => {
         ev.stopPropagation();
         this.onClick(ev, d);
       });

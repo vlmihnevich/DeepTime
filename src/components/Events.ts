@@ -71,7 +71,7 @@ export class Events {
       .on("mouseover", (ev: MouseEvent, d: EvtWithRow) => this.onHover(ev, d))
       .on("mousemove", (ev: MouseEvent) => this.onMove(ev))
       .on("mouseout", () => this.onLeave())
-      .on("click", (ev: MouseEvent, d: EvtWithRow) => {
+      .on("dblclick", (ev: MouseEvent, d: EvtWithRow) => {
         ev.stopPropagation();
         this.onClick(ev, d);
       });

@@ -40,7 +40,7 @@ export class GeoLayer {
       .on("mouseover", (ev: MouseEvent, d: GeoItem) => this.onHover(ev, d))
       .on("mousemove", (ev: MouseEvent) => this.onMove(ev))
       .on("mouseout", () => this.onLeave())
-      .on("click", (ev: MouseEvent, d: GeoItem) => {
+      .on("dblclick", (ev: MouseEvent, d: GeoItem) => {
         ev.stopPropagation();
         this.onClick(ev, d);
       });

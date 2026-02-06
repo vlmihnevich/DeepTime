@@ -137,7 +137,10 @@ export class Timeline {
     const clickEvt = (_ev: MouseEvent, d: KeyEvent) => this.infoPanel.show(d, "event");
 
     const showSpTT = (ev: MouseEvent, d: Species) => this.tooltip.show(ev, d, "species");
-    const clickSp = (_ev: MouseEvent, d: Species) => this.infoPanel.show(d, "species");
+    const clickSp = (_ev: MouseEvent, d: Species) => {
+      this.zoomTo(d.start, d.end);
+      this.infoPanel.show(d, "species");
+    };
 
     // Order matters for SVG layering
     this.grid = new Grid(this.g, this.axisY);
@@ -163,7 +166,7 @@ export class Timeline {
         this.updateUrl();
       });
 
-    this.svg.call(this.zoom);
+    this.svg.call(this.zoom).on("dblclick.zoom", null);
     this.svg.on("click", () => this.infoPanel.close());
 
     this.restoreStateFromUrl();

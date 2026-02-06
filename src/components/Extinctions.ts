@@ -33,7 +33,7 @@ export class Extinctions {
       .on("mouseover", (ev: MouseEvent, d: KeyEvent) => this.onHover(ev, d))
       .on("mousemove", (ev: MouseEvent) => this.onMove(ev))
       .on("mouseout", () => this.onLeave())
-      .on("click", (ev: MouseEvent, d: KeyEvent) => {
+      .on("dblclick", (ev: MouseEvent, d: KeyEvent) => {
         ev.stopPropagation();
         this.onClick(ev, d);
       });
