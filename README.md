@@ -2,6 +2,8 @@
 
 **DeepTime** is a high-performance interactive visualization of 4.54 billion years of Earth's history. The project combines geological data, key biological events, and species life spans into a single intuitive timeline.
 
+[**Live Demo**](https://vlmihnevich.github.io/DeepTime/)
+
 ![DeepTime Interface](./docs/image.png)
 
 ## 🌟 Features
