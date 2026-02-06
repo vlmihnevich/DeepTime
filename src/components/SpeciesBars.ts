@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 import { N } from "../i18n";
 import { contrastColor } from "../utils/color";
+import { formatDuration, formatDuration24 } from "../utils/format";
 import type { Species, RenderContext } from "../types";
 
 export class SpeciesBars {
@@ -40,6 +41,7 @@ export class SpeciesBars {
       });
     ent.append("rect").attr("class", "species-bar");
     ent.append("text").attr("class", "species-label");
+    ent.append("text").attr("class", "species-duration");
 
     const all = ent.merge(sel);
     all.select<SVGRectElement>("rect")
@@ -71,6 +73,28 @@ export class SpeciesBars {
       .attr("font-size", "13px")
       .attr("dominant-baseline", "central")
       .attr("opacity", 1);
+
+    all.select<SVGTextElement>(".species-duration")
+      .attr("x", (d) => {
+        const visR = Math.min(ctx.iW, ctx.xScale(d.end));
+        return visR - 5;
+      })
+      .attr("y", (d) => this.spY + (d._lane || 0) * (this.spLane + this.spGap) + this.spLane / 2)
+      .attr("fill", (d) => contrastColor(d.color))
+      .attr("text-anchor", "end")
+      .attr("font-size", "11px")
+      .attr("dominant-baseline", "central")
+      .attr("opacity", 1)
+      .text((d) => {
+        const visL = Math.max(0, ctx.xScale(d.start));
+        const visR = Math.min(ctx.iW, ctx.xScale(d.end));
+        const visPx = visR - visL;
+        if (visPx < 120) return "";
+        const dur = formatDuration(d.start, d.end);
+        const clock = formatDuration24(d.start, d.end);
+        if (visPx < 220) return dur;
+        return `${dur} (${clock})`;
+      });
 
     sel.exit().remove();
   }
