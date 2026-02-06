@@ -19,7 +19,7 @@ import { t, getLang } from "../i18n";
 const MARGIN = { top: 16, right: 30, bottom: 40, left: 30 };
 const EON_H = 50, ERA_H = 34, PER_H = 26, GAP = 3;
 const EON_Y = 0, ERA_Y = EON_H + GAP, PER_Y = ERA_Y + ERA_H + GAP;
-const SP_LANE = 34, SP_GAP = 6;
+const SP_LANE = 28, SP_GAP = 4;
 
 export class Timeline {
   private container: HTMLElement;
@@ -99,8 +99,9 @@ export class Timeline {
     this.spY = PER_Y + PER_H + 10;
     const maxLane = this.speciesArr.reduce((m, s) => Math.max(m, s._lane || 0), 0);
     const spBottom = this.spY + (maxLane + 1) * (SP_LANE + SP_GAP);
-    this.axisY = this.iH - 10;
-    this.evtY = Math.round((spBottom + 12 + this.axisY) / 2);
+    this.axisY = this.iH - 12;
+    // Оставляем больше места под событиями, сдвигая базовую линию вниз
+    this.evtY = Math.min(this.axisY - 40, Math.round(spBottom + 45));
     this.evtH = this.axisY - this.evtY;
   }
 

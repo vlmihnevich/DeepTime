@@ -45,9 +45,9 @@ export class Events {
       .filter((d) => {
         if (d.type === "extinction") return false;
         if (MAJOR_EVENT_NAMES.has(d.name)) return true;
-        // Human events are very dense, so we require higher zoom
-        if (d.type === "human") return k >= 8; 
-        return k >= 2.5;
+        // Human events are extremely dense, keep them hidden longer
+        if (d.type === "human") return k >= 80;
+        return k >= 5;
       })
       .map((d) => ({ ...d, _row: 0 }));
 
@@ -55,8 +55,15 @@ export class Events {
     visible.forEach((d) => {
       const px = ctx.xScale(d.date);
       let row = 0;
-      // Increased threshold for larger fonts and long labels
-      while (positions.some((p) => p.row === row && Math.abs(p.px - px) < 140)) row++;
+      // Try rows in order: 0, -1, 1, -2, 2... to spread events vertically
+      const tryRows = [0, -1, 1, -2, 2, -3, 3, -4, 4, -5, 5];
+      for (const r of tryRows) {
+        if (!positions.some((p) => p.row === r && Math.abs(p.px - px) < 160)) {
+          row = r;
+          break;
+        }
+        row = r;
+      }
       positions.push({ px, row });
       d._row = row;
     });
@@ -88,20 +95,20 @@ export class Events {
       .attr("cy", this.evtY).attr("r", (d) => (MAJOR_EVENT_NAMES.has(d.name) ? 5 : 3.5))
       .attr("fill", ecol).attr("stroke", "var(--bg-deep)").attr("stroke-width", 1.5);
     all.select<SVGTextElement>(".event-text")
-      .attr("x", 0).attr("y", (d) => this.evtY - 10 - d._row * 22)
+      .attr("x", 0).attr("y", (d) => this.evtY - (d._row > 0 ? 15 : 0) + d._row * 22)
       .attr("text-anchor", (d) => {
         const px = ctx.xScale(d.date);
-        if (px < 60) return "start";
-        if (px > ctx.iW - 60) return "end";
+        if (px < 80) return "start";
+        if (px > ctx.iW - 80) return "end";
         return "middle";
       })
       .attr("fill", ecol)
-      .attr("font-size", "16px")
+      .attr("font-size", "15px")
       .attr("font-weight", "600")
-      .attr("opacity", (d) => (MAJOR_EVENT_NAMES.has(d.name) ? 0.95 : 0.75))
+      .attr("opacity", (d) => (MAJOR_EVENT_NAMES.has(d.name) ? 1 : 0.85))
       .text((d) => {
         const nm = N(d);
-        const maxLen = k > 20 ? 40 : k > 5 ? 25 : 18;
+        const maxLen = k > 500 ? 50 : k > 50 ? 30 : 20;
         return nm.length > maxLen ? nm.slice(0, maxLen - 1) + "\u2026" : nm;
       });
 
