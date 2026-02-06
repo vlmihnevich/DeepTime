@@ -19,7 +19,7 @@ import { t } from "../i18n";
 const MARGIN = { top: 16, right: 30, bottom: 40, left: 30 };
 const EON_H = 50, ERA_H = 34, PER_H = 26, GAP = 3;
 const EON_Y = 0, ERA_Y = EON_H + GAP, PER_Y = ERA_Y + ERA_H + GAP;
-const SP_LANE = 28, SP_GAP = 6;
+const SP_LANE = 34, SP_GAP = 6;
 
 export class Timeline {
   private container: HTMLElement;
