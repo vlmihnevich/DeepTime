@@ -16,13 +16,13 @@ export class Events {
   private g: d3.Selection<SVGGElement, unknown, null, undefined>;
   private data: KeyEvent[];
   private evtY: number;
-  private evtH: number;
+  private axisY: number;
 
   constructor(
     parent: d3.Selection<SVGGElement, unknown, null, undefined>,
     data: KeyEvent[],
     evtY: number,
-    evtH: number,
+    axisY: number,
     private onHover: (ev: MouseEvent, d: KeyEvent) => void,
     private onMove: (ev: MouseEvent) => void,
     private onLeave: () => void,
@@ -31,7 +31,7 @@ export class Events {
     this.g = parent.append("g");
     this.data = data;
     this.evtY = evtY;
-    this.evtH = evtH;
+    this.axisY = axisY;
   }
 
   render(ctx: RenderContext): void {
@@ -64,15 +64,16 @@ export class Events {
     const all = ent.merge(sel);
     all.attr("transform", (d) => `translate(${ctx.xScale(d.date)},0)`);
     all.select<SVGLineElement>(".event-line")
-      .attr("y1", this.evtY).attr("y2", this.evtY + this.evtH * 0.7)
-      .attr("stroke", ecol).attr("opacity", 0.3);
+      .attr("y1", this.evtY).attr("y2", this.axisY)
+      .attr("stroke", ecol).attr("opacity", 0.18);
     all.select<SVGCircleElement>(".event-dot")
       .attr("cy", this.evtY).attr("r", (d) => (MAJOR_EVENT_NAMES.has(d.name) ? 5 : 3.5))
       .attr("fill", ecol).attr("stroke", "#0c1018").attr("stroke-width", 1.5);
     all.select<SVGTextElement>(".event-text")
       .attr("x", 6).attr("y", (d) => this.evtY + 14 + d._row * 15)
       .attr("fill", ecol)
-      .attr("font-size", k > 10 ? "11px" : "10px")
+      .attr("font-size", "14px")
+      .attr("font-weight", "600")
       .attr("opacity", (d) => (MAJOR_EVENT_NAMES.has(d.name) ? 0.9 : 0.7))
       .text((d) => {
         const nm = N(d);

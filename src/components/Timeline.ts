@@ -95,10 +95,12 @@ export class Timeline {
   }
 
   private computeLayout(): void {
-    this.evtY = PER_Y + PER_H + 16;
-    this.evtH = Math.max(100, Math.min(200, this.iH * 0.22));
-    this.spY = this.evtY + this.evtH + 16;
+    this.spY = PER_Y + PER_H + 10;
+    const maxLane = this.speciesArr.reduce((m, s) => Math.max(m, s._lane || 0), 0);
+    const spBottom = this.spY + (maxLane + 1) * (SP_LANE + SP_GAP);
     this.axisY = this.iH - 10;
+    this.evtY = spBottom + 12;
+    this.evtH = this.axisY - this.evtY;
   }
 
   private init(): void {
@@ -142,8 +144,8 @@ export class Timeline {
     this.eonLayer = new GeoLayer(this.g, this.eons, EON_Y, EON_H, "eon-g", showGeoTT, moveTT, hideTT, clickGeo);
     this.eraLayer = new GeoLayer(this.g, this.eras, ERA_Y, ERA_H, "era-g", showGeoTT, moveTT, hideTT, clickGeo);
     this.perLayer = new GeoLayer(this.g, this.periods, PER_Y, PER_H, "per-g", showGeoTT, moveTT, hideTT, clickGeo);
-    this.events = new Events(this.g, KEY_EVENTS, this.evtY, this.evtH, showEvtTT, moveTT, hideTT, clickEvt);
     this.speciesBars = new SpeciesBars(this.g, this.speciesArr, this.spY, SP_LANE, SP_GAP, showSpTT, moveTT, hideTT, clickSp);
+    this.events = new Events(this.g, KEY_EVENTS, this.evtY, this.axisY, showEvtTT, moveTT, hideTT, clickEvt);
     this.youAreHere = new YouAreHere(this.g, EON_H);
     this.axis = new Axis(this.g, this.axisY);
 

@@ -60,7 +60,7 @@ export class GeoLayer {
       })
       .attr("y", this.y + this.h / 2)
       .attr("fill", (d) => contrastColor(d.color))
-      .style("font-size", this.h >= 40 ? "12px" : this.h >= 30 ? "11px" : "9px")
+      .style("font-size", this.h >= 40 ? "14px" : this.h >= 30 ? "13px" : "11px")
       .text((d) => {
         const nm = N(d);
         const visL = Math.max(0, xScale(d.start));
