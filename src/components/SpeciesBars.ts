@@ -42,7 +42,7 @@ export class SpeciesBars {
       .attr("width", (d) => Math.max(4, ctx.xScale(d.end) - ctx.xScale(d.start)))
       .attr("height", this.spLane)
       .attr("fill", (d) => d.color)
-      .attr("opacity", 0.7)
+      .attr("opacity", 1)
       .attr("stroke", "rgba(255,255,255,0.08)")
       .attr("stroke-width", 0.5);
 
@@ -63,7 +63,7 @@ export class SpeciesBars {
       })
       .attr("font-size", "13px")
       .attr("dominant-baseline", "central")
-      .attr("opacity", k > 3 ? 0.9 : 0.6);
+      .attr("opacity", 1);
 
     all.on("mouseover", (ev: MouseEvent, d: Species) => this.onHover(ev, d))
       .on("mousemove", (ev: MouseEvent) => this.onMove(ev))

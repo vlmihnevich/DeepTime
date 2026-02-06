@@ -21,7 +21,7 @@ export class Axis {
         .tickFormat((d) => formatMa(Math.abs(d.valueOf())))
         .ticks(tickCount),
     );
-    this.g.selectAll("text").attr("fill", "#5a6472");
+    this.g.selectAll("text").attr("fill", "#c0c8d4");
     this.g.selectAll("line, path").attr("stroke", "#1c2430");
 
     // 24-hour clock labels below main axis
@@ -33,7 +33,7 @@ export class Axis {
       .attr("y", 32)
       .attr("text-anchor", "middle")
       .attr("fill", "#d4a54a")
-      .attr("opacity", 0.45)
+      .attr("opacity", 0.9)
       .attr("font-size", "9.5px")
       .attr("font-family", "'DM Sans', system-ui, sans-serif")
       .attr("font-weight", "500")
