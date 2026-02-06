@@ -26,7 +26,7 @@ export interface KeyEvent {
   name: string;
   ru: string;
   date: number;
-  type: "planetary" | "origin" | "extinction";
+  type: "planetary" | "origin" | "extinction" | "human";
   description: string;
   descRu: string;
   wikiUrl: string;

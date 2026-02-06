@@ -5,7 +5,7 @@ import type { KeyEvent, RenderContext } from "../types";
 const MAJOR_EVENT_NAMES = new Set([
   "Formation of Earth", "Origin of Life", "Great Oxidation Event",
   "Cambrian Explosion", "First Dinosaurs", "Homo Sapiens",
-  "First Eukaryotes", "First Animals",
+  "First Eukaryotes", "First Animals", "Agriculture",
 ]);
 
 interface EvtWithRow extends KeyEvent {
@@ -58,7 +58,10 @@ export class Events {
       d._row = row;
     });
 
-    const ecol = (d: KeyEvent) => (d.type === "origin" ? "#4ec98a" : "#e0a040");
+    const ecol = (d: KeyEvent) => {
+      if (d.type === "human") return "#5dade2";
+      return d.type === "origin" ? "#4ec98a" : "#e0a040";
+    };
 
     const sel = this.g.selectAll<SVGGElement, EvtWithRow>(".event-marker").data(visible, (d) => d.name);
     const ent = sel.enter().append("g").attr("class", "event-marker")
