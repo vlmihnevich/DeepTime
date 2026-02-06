@@ -1,0 +1,81 @@
+import * as d3 from "d3";
+import { N } from "../i18n";
+import { contrastColor } from "../utils/color";
+import type { GeoItem, RenderContext } from "../types";
+
+export class GeoLayer {
+  private g: d3.Selection<SVGGElement, unknown, null, undefined>;
+  private data: GeoItem[];
+  private y: number;
+  private h: number;
+  private cls: string;
+
+  constructor(
+    parent: d3.Selection<SVGGElement, unknown, null, undefined>,
+    data: GeoItem[],
+    y: number,
+    h: number,
+    cls: string,
+    private onHover: (ev: MouseEvent, d: GeoItem) => void,
+    private onMove: (ev: MouseEvent) => void,
+    private onLeave: () => void,
+    private onClick: (ev: MouseEvent, d: GeoItem) => void,
+  ) {
+    this.g = parent.append("g");
+    this.data = data;
+    this.y = y;
+    this.h = h;
+    this.cls = cls;
+  }
+
+  render(ctx: RenderContext): void {
+    const { xScale } = ctx;
+    const iW = ctx.iW;
+
+    const sel = this.g.selectAll<SVGGElement, GeoItem>(`.${this.cls}`).data(this.data, (d) => d.name);
+    const ent = sel.enter().append("g").attr("class", this.cls);
+    ent.append("rect").attr("class", "geo-bar");
+    ent.append("text").attr("class", "geo-label");
+    const all = ent.merge(sel);
+
+    all.select<SVGRectElement>("rect")
+      .attr("x", (d) => xScale(d.start))
+      .attr("y", this.y)
+      .attr("width", (d) => Math.max(0, xScale(d.end) - xScale(d.start)))
+      .attr("height", this.h)
+      .attr("fill", (d) => d.color)
+      .on("mouseover", (ev: MouseEvent, d: GeoItem) => this.onHover(ev, d))
+      .on("mousemove", (ev: MouseEvent) => this.onMove(ev))
+      .on("mouseout", () => this.onLeave())
+      .on("click", (ev: MouseEvent, d: GeoItem) => {
+        ev.stopPropagation();
+        this.onClick(ev, d);
+      });
+
+    all.select<SVGTextElement>("text")
+      .attr("x", (d) => {
+        const a = Math.max(0, xScale(d.start));
+        const b = Math.min(iW, xScale(d.end));
+        return (a + b) / 2;
+      })
+      .attr("y", this.y + this.h / 2)
+      .attr("fill", (d) => contrastColor(d.color))
+      .style("font-size", this.h >= 40 ? "12px" : this.h >= 30 ? "11px" : "9px")
+      .text((d) => {
+        const nm = N(d);
+        const visL = Math.max(0, xScale(d.start));
+        const visR = Math.min(iW, xScale(d.end));
+        const px = visR - visL;
+        if (px < 28) return "";
+        if (px < 55) return nm.slice(0, 4);
+        if (px < 90) return nm.length > 10 ? nm.slice(0, 9) + "\u2026" : nm;
+        return nm;
+      });
+
+    sel.exit().remove();
+  }
+
+  clear(): void {
+    this.g.selectAll("*").remove();
+  }
+}
