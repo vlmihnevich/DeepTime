@@ -1,52 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>History of Life on Earth</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>History of Life on Earth</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap"
+    rel="stylesheet">
 </head>
+
 <body>
 
-<div id="nav-bar">
-  <span class="nav-title" id="nav-title">HISTORY OF LIFE</span>
-  <button class="nav-btn" data-eon="Hadean" id="btn-hadean">Hadean</button>
-  <button class="nav-btn" data-eon="Archean" id="btn-archean">Archean</button>
-  <button class="nav-btn" data-eon="Proterozoic" id="btn-proterozoic">Proterozoic</button>
-  <button class="nav-btn" data-eon="Phanerozoic" id="btn-phanerozoic">Phanerozoic</button>
-  <button class="nav-btn reset-btn" id="btn-reset">Reset</button>
-  <button class="nav-btn lang-btn" id="btn-lang">RU</button>
-  <div id="context-indicator"></div>
-</div>
-
-<div id="timeline-container"></div>
-<div id="opening-annotation"></div>
-
-<div id="tooltip">
-  <div class="tt-title"></div>
-  <div class="tt-date"></div>
-  <div class="tt-clock"></div>
-  <div class="tt-desc"></div>
-</div>
-
-<div id="info-panel">
-  <div class="panel-header">
-    <div class="panel-title"></div>
-    <button class="panel-close">&times;</button>
+  <div id="nav-bar">
+    <span class="nav-title" id="nav-title">HISTORY OF LIFE</span>
+    <button class="nav-btn" data-eon="Hadean" id="btn-hadean">Hadean</button>
+    <button class="nav-btn" data-eon="Archean" id="btn-archean">Archean</button>
+    <button class="nav-btn" data-eon="Proterozoic" id="btn-proterozoic">Proterozoic</button>
+    <button class="nav-btn" data-eon="Phanerozoic" id="btn-phanerozoic">Phanerozoic</button>
+    <button class="nav-btn reset-btn" id="btn-reset">Reset</button>
+    <button class="nav-btn lang-btn" id="btn-lang">RU</button>
+    <div id="context-indicator"></div>
   </div>
-  <div class="panel-dates"></div>
-  <div class="panel-duration"></div>
-  <div class="panel-desc"></div>
-  <div class="panel-perspective"></div>
-  <a class="panel-link" href="#" target="_blank" rel="noopener"></a>
-</div>
 
-<div id="keyboard-hint">
-  <kbd>+</kbd><kbd>-</kbd> zoom &nbsp;<kbd>&larr;</kbd><kbd>&rarr;</kbd> pan &nbsp;<kbd>Home</kbd> reset &nbsp;<kbd>1</kbd>-<kbd>4</kbd>
-</div>
+  <div id="timeline-container"></div>
+  <div id="opening-annotation"></div>
 
-<script type="module" src="/src/main.ts"></script>
+  <div id="tooltip">
+    <div class="tt-title"></div>
+    <div class="tt-date"></div>
+    <div class="tt-clock"></div>
+    <div class="tt-desc"></div>
+  </div>
+
+  <div id="info-panel">
+    <div class="panel-header">
+      <div class="panel-title"></div>
+      <button class="panel-close">&times;</button>
+    </div>
+    <div class="panel-dates"></div>
+    <div class="panel-duration"></div>
+    <div class="panel-desc"></div>
+    <div class="panel-perspective"></div>
+    <a class="panel-link" href="#" target="_blank" rel="noopener"></a>
+  </div>
+
+  <div id="keyboard-hint">
+    <kbd>+</kbd><kbd>-</kbd> zoom &nbsp;<kbd>&larr;</kbd><kbd>&rarr;</kbd> pan &nbsp;<kbd>Home</kbd> reset
+    &nbsp;<kbd>1</kbd>-<kbd>4</kbd>
+  </div>
+
+  <script type="module" src="src/main.ts"></script>
 </body>
+
 </html>
