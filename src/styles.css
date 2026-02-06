@@ -15,7 +15,7 @@
   /* 11px — axis labels, keyboard hints */
   --fs-small: 0.75rem;
   /* 12px — buttons, badges, dates */
-  --fs-base: 0.875rem;
+  --fs-base: 1rem;
   /* 14px — body text, descriptions */
   --fs-lead: 1rem;
   /* 16px — lead paragraphs, annotation body */
@@ -45,7 +45,7 @@
   --text-primary: #e8e0d4;
   --text-secondary: #a09888;
   --text-muted: #6b6258;
-  --text-faint: #4a4038;
+  --text-faint: #9f673a;
 
   /* ─── Semantic colors ─── */
   --extinction-red: #e03e3e;
