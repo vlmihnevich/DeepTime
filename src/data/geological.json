@@ -1,0 +1,88 @@
+[
+  { "name": "Hadean", "ru": "Катархей", "start": 4540, "end": 4000, "color": "#AE1F7A",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Hadean", "wikiRu": "https://ru.wikipedia.org/wiki/Катархей",
+    "eras": [
+      { "name": "Early Hadean", "ru": "Ранний катархей", "start": 4540, "end": 4200, "color": "#9E1A6E",
+        "wikiUrl": "https://en.wikipedia.org/wiki/Hadean", "wikiRu": "https://ru.wikipedia.org/wiki/Катархей",
+        "periods": [{ "name": "Pre-Nectarian", "ru": "Донектарий", "start": 4540, "end": 4200, "color": "#9E1A6E",
+          "wikiUrl": "https://en.wikipedia.org/wiki/Pre-Nectarian", "wikiRu": "https://ru.wikipedia.org/wiki/Донектарский_период" }] },
+      { "name": "Late Hadean", "ru": "Поздний катархей", "start": 4200, "end": 4000, "color": "#B5297F",
+        "wikiUrl": "https://en.wikipedia.org/wiki/Hadean", "wikiRu": "https://ru.wikipedia.org/wiki/Катархей",
+        "periods": [{ "name": "Nectarian", "ru": "Нектарий", "start": 4200, "end": 4000, "color": "#B5297F",
+          "wikiUrl": "https://en.wikipedia.org/wiki/Nectarian", "wikiRu": "https://ru.wikipedia.org/wiki/Нектарский_период" }] }
+    ] },
+  { "name": "Archean", "ru": "Архей", "start": 4000, "end": 2500, "color": "#F0047F",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Archean", "wikiRu": "https://ru.wikipedia.org/wiki/Архей",
+    "eras": [
+      { "name": "Eoarchean", "ru": "Эоархей", "start": 4000, "end": 3600, "color": "#DA037B",
+        "wikiUrl": "https://en.wikipedia.org/wiki/Eoarchean", "wikiRu": "https://ru.wikipedia.org/wiki/Эоархей",
+        "periods": [{ "name": "Eoarchean", "ru": "Эоархей", "start": 4000, "end": 3600, "color": "#DA037B",
+          "wikiUrl": "https://en.wikipedia.org/wiki/Eoarchean", "wikiRu": "https://ru.wikipedia.org/wiki/Эоархей" }] },
+      { "name": "Paleoarchean", "ru": "Палеоархей", "start": 3600, "end": 3200, "color": "#F23F97",
+        "wikiUrl": "https://en.wikipedia.org/wiki/Paleoarchean", "wikiRu": "https://ru.wikipedia.org/wiki/Палеоархей",
+        "periods": [{ "name": "Paleoarchean", "ru": "Палеоархей", "start": 3600, "end": 3200, "color": "#F23F97",
+          "wikiUrl": "https://en.wikipedia.org/wiki/Paleoarchean", "wikiRu": "https://ru.wikipedia.org/wiki/Палеоархей" }] },
+      { "name": "Mesoarchean", "ru": "Мезоархей", "start": 3200, "end": 2800, "color": "#F774AC",
+        "wikiUrl": "https://en.wikipedia.org/wiki/Mesoarchean", "wikiRu": "https://ru.wikipedia.org/wiki/Мезоархей",
+        "periods": [{ "name": "Mesoarchean", "ru": "Мезоархей", "start": 3200, "end": 2800, "color": "#F774AC",
+          "wikiUrl": "https://en.wikipedia.org/wiki/Mesoarchean", "wikiRu": "https://ru.wikipedia.org/wiki/Мезоархей" }] },
+      { "name": "Neoarchean", "ru": "Неоархей", "start": 2800, "end": 2500, "color": "#F99BC1",
+        "wikiUrl": "https://en.wikipedia.org/wiki/Neoarchean", "wikiRu": "https://ru.wikipedia.org/wiki/Неоархей",
+        "periods": [{ "name": "Neoarchean", "ru": "Неоархей", "start": 2800, "end": 2500, "color": "#F99BC1",
+          "wikiUrl": "https://en.wikipedia.org/wiki/Neoarchean", "wikiRu": "https://ru.wikipedia.org/wiki/Неоархей" }] }
+    ] },
+  { "name": "Proterozoic", "ru": "Протерозой", "start": 2500, "end": 538.8, "color": "#F73F8C",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Proterozoic", "wikiRu": "https://ru.wikipedia.org/wiki/Протерозой",
+    "eras": [
+      { "name": "Paleoproterozoic", "ru": "Палеопротерозой", "start": 2500, "end": 1600, "color": "#F74370",
+        "wikiUrl": "https://en.wikipedia.org/wiki/Paleoproterozoic", "wikiRu": "https://ru.wikipedia.org/wiki/Палеопротерозой",
+        "periods": [
+          { "name": "Siderian", "ru": "Сидерий", "start": 2500, "end": 2300, "color": "#F6887C", "wikiUrl": "https://en.wikipedia.org/wiki/Siderian", "wikiRu": "https://ru.wikipedia.org/wiki/Сидерий" },
+          { "name": "Rhyacian", "ru": "Риасий", "start": 2300, "end": 2050, "color": "#F6A489", "wikiUrl": "https://en.wikipedia.org/wiki/Rhyacian", "wikiRu": "https://ru.wikipedia.org/wiki/Риасий" },
+          { "name": "Orosirian", "ru": "Орозирий", "start": 2050, "end": 1800, "color": "#F6BC96", "wikiUrl": "https://en.wikipedia.org/wiki/Orosirian", "wikiRu": "https://ru.wikipedia.org/wiki/Орозирий" },
+          { "name": "Statherian", "ru": "Статерий", "start": 1800, "end": 1600, "color": "#F6D4A5", "wikiUrl": "https://en.wikipedia.org/wiki/Statherian", "wikiRu": "https://ru.wikipedia.org/wiki/Статерий" }
+        ] },
+      { "name": "Mesoproterozoic", "ru": "Мезопротерозой", "start": 1600, "end": 1000, "color": "#FDB462",
+        "wikiUrl": "https://en.wikipedia.org/wiki/Mesoproterozoic", "wikiRu": "https://ru.wikipedia.org/wiki/Мезопротерозой",
+        "periods": [
+          { "name": "Calymmian", "ru": "Калимий", "start": 1600, "end": 1400, "color": "#FDC07A", "wikiUrl": "https://en.wikipedia.org/wiki/Calymmian", "wikiRu": "https://ru.wikipedia.org/wiki/Калимий" },
+          { "name": "Ectasian", "ru": "Эктазий", "start": 1400, "end": 1200, "color": "#FDCC92", "wikiUrl": "https://en.wikipedia.org/wiki/Ectasian", "wikiRu": "https://ru.wikipedia.org/wiki/Эктазий" },
+          { "name": "Stenian", "ru": "Стений", "start": 1200, "end": 1000, "color": "#FDD8AA", "wikiUrl": "https://en.wikipedia.org/wiki/Stenian", "wikiRu": "https://ru.wikipedia.org/wiki/Стений" }
+        ] },
+      { "name": "Neoproterozoic", "ru": "Неопротерозой", "start": 1000, "end": 538.8, "color": "#FEB342",
+        "wikiUrl": "https://en.wikipedia.org/wiki/Neoproterozoic", "wikiRu": "https://ru.wikipedia.org/wiki/Неопротерозой",
+        "periods": [
+          { "name": "Tonian", "ru": "Тоний", "start": 1000, "end": 720, "color": "#FEC67A", "wikiUrl": "https://en.wikipedia.org/wiki/Tonian", "wikiRu": "https://ru.wikipedia.org/wiki/Тоний" },
+          { "name": "Cryogenian", "ru": "Криогений", "start": 720, "end": 635, "color": "#FED990", "wikiUrl": "https://en.wikipedia.org/wiki/Cryogenian", "wikiRu": "https://ru.wikipedia.org/wiki/Криогений" },
+          { "name": "Ediacaran", "ru": "Эдиакарий", "start": 635, "end": 538.8, "color": "#FEE6AA", "wikiUrl": "https://en.wikipedia.org/wiki/Ediacaran", "wikiRu": "https://ru.wikipedia.org/wiki/Эдиакарий" }
+        ] }
+    ] },
+  { "name": "Phanerozoic", "ru": "Фанерозой", "start": 538.8, "end": 0, "color": "#9ED682",
+    "wikiUrl": "https://en.wikipedia.org/wiki/Phanerozoic", "wikiRu": "https://ru.wikipedia.org/wiki/Фанерозой",
+    "eras": [
+      { "name": "Paleozoic", "ru": "Палеозой", "start": 538.8, "end": 251.9, "color": "#99C08D",
+        "wikiUrl": "https://en.wikipedia.org/wiki/Paleozoic", "wikiRu": "https://ru.wikipedia.org/wiki/Палеозой",
+        "periods": [
+          { "name": "Cambrian", "ru": "Кембрий", "start": 538.8, "end": 485.4, "color": "#7FA056", "wikiUrl": "https://en.wikipedia.org/wiki/Cambrian", "wikiRu": "https://ru.wikipedia.org/wiki/Кембрийский_период" },
+          { "name": "Ordovician", "ru": "Ордовик", "start": 485.4, "end": 443.8, "color": "#009270", "wikiUrl": "https://en.wikipedia.org/wiki/Ordovician", "wikiRu": "https://ru.wikipedia.org/wiki/Ордовикский_период" },
+          { "name": "Silurian", "ru": "Силур", "start": 443.8, "end": 419.2, "color": "#B3E1B6", "wikiUrl": "https://en.wikipedia.org/wiki/Silurian", "wikiRu": "https://ru.wikipedia.org/wiki/Силурийский_период" },
+          { "name": "Devonian", "ru": "Девон", "start": 419.2, "end": 358.9, "color": "#CB8C37", "wikiUrl": "https://en.wikipedia.org/wiki/Devonian", "wikiRu": "https://ru.wikipedia.org/wiki/Девонский_период" },
+          { "name": "Carboniferous", "ru": "Карбон", "start": 358.9, "end": 298.9, "color": "#67A599", "wikiUrl": "https://en.wikipedia.org/wiki/Carboniferous", "wikiRu": "https://ru.wikipedia.org/wiki/Каменноугольный_период" },
+          { "name": "Permian", "ru": "Пермь", "start": 298.9, "end": 251.9, "color": "#F04028", "wikiUrl": "https://en.wikipedia.org/wiki/Permian", "wikiRu": "https://ru.wikipedia.org/wiki/Пермский_период" }
+        ] },
+      { "name": "Mesozoic", "ru": "Мезозой", "start": 251.9, "end": 66, "color": "#67C5CA",
+        "wikiUrl": "https://en.wikipedia.org/wiki/Mesozoic", "wikiRu": "https://ru.wikipedia.org/wiki/Мезозой",
+        "periods": [
+          { "name": "Triassic", "ru": "Триас", "start": 251.9, "end": 201.4, "color": "#812B92", "wikiUrl": "https://en.wikipedia.org/wiki/Triassic", "wikiRu": "https://ru.wikipedia.org/wiki/Триасовый_период" },
+          { "name": "Jurassic", "ru": "Юра", "start": 201.4, "end": 145, "color": "#34B2C9", "wikiUrl": "https://en.wikipedia.org/wiki/Jurassic", "wikiRu": "https://ru.wikipedia.org/wiki/Юрский_период" },
+          { "name": "Cretaceous", "ru": "Мел", "start": 145, "end": 66, "color": "#7FC64E", "wikiUrl": "https://en.wikipedia.org/wiki/Cretaceous", "wikiRu": "https://ru.wikipedia.org/wiki/Меловой_период" }
+        ] },
+      { "name": "Cenozoic", "ru": "Кайнозой", "start": 66, "end": 0, "color": "#F2F91D",
+        "wikiUrl": "https://en.wikipedia.org/wiki/Cenozoic", "wikiRu": "https://ru.wikipedia.org/wiki/Кайнозой",
+        "periods": [
+          { "name": "Paleogene", "ru": "Палеоген", "start": 66, "end": 23.03, "color": "#FD9A52", "wikiUrl": "https://en.wikipedia.org/wiki/Paleogene", "wikiRu": "https://ru.wikipedia.org/wiki/Палеогеновый_период" },
+          { "name": "Neogene", "ru": "Неоген", "start": 23.03, "end": 2.58, "color": "#FFE619", "wikiUrl": "https://en.wikipedia.org/wiki/Neogene", "wikiRu": "https://ru.wikipedia.org/wiki/Неогеновый_период" },
+          { "name": "Quaternary", "ru": "Четвертичный", "start": 2.58, "end": 0, "color": "#F9F97F", "wikiUrl": "https://en.wikipedia.org/wiki/Quaternary", "wikiRu": "https://ru.wikipedia.org/wiki/Четвертичный_период" }
+        ] }
+    ] }
+]
