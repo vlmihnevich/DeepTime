@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>History of Life on Earth</title>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #0a0e17; color: #e0e6ed;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  overflow: hidden; height: 100vh; width: 100vw; user-select: none;
+}
+
+#nav-bar {
+  position: fixed; top: 0; left: 0; right: 0; height: 44px;
+  background: rgba(10,14,23,0.95); backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(79,195,247,0.15);
+  display: flex; align-items: center; padding: 0 16px; gap: 6px; z-index: 100;
+}
+.nav-title { font-size: 13px; font-weight: 700; color: #4fc3f7; margin-right: 10px; white-space: nowrap; letter-spacing: .5px; }
+.nav-btn {
+  background: rgba(79,195,247,0.06); border: 1px solid rgba(79,195,247,0.18);
+  color: #90a4ae; padding: 4px 10px; border-radius: 4px; font-size: 11px;
+  cursor: pointer; transition: all .15s; white-space: nowrap;
+}
+.nav-btn:hover { background: rgba(79,195,247,0.15); color: #e0e6ed; border-color: rgba(79,195,247,0.35); }
+.nav-btn.active { background: rgba(79,195,247,0.22); color: #4fc3f7; border-color: #4fc3f7; }
+.nav-btn.reset-btn { background: rgba(255,145,0,0.08); border-color: rgba(255,145,0,0.25); color: #ff9100; }
+.nav-btn.reset-btn:hover { background: rgba(255,145,0,0.18); }
+.nav-btn.lang-btn { background: rgba(79,195,247,0.12); border-color: rgba(79,195,247,0.3); color: #4fc3f7; font-weight: 700; letter-spacing: 1px; padding: 4px 8px; }
+.nav-btn.lang-btn:hover { background: rgba(79,195,247,0.25); }
+#context-indicator { margin-left: auto; font-size: 11px; color: #607080; white-space: nowrap; }
+#context-indicator span { color: #4fc3f7; }
+
+#timeline-container { position: absolute; top: 44px; left: 0; right: 0; bottom: 0; overflow: hidden; cursor: grab; }
+#timeline-container:active { cursor: grabbing; }
+
+#opening-annotation {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: rgba(10,14,23,0.88); border: 1px solid rgba(79,195,247,0.25);
+  border-radius: 8px; padding: 12px 22px; font-size: 13px; color: #78909c;
+  text-align: center; max-width: 600px; z-index: 50; opacity: 1;
+  transition: opacity .5s; pointer-events: none;
+}
+#opening-annotation strong { color: #4fc3f7; }
+#opening-annotation.hidden { opacity: 0; }
+
+#tooltip {
+  position: fixed; pointer-events: none; background: rgba(15,22,36,0.96);
+  border: 1px solid rgba(79,195,247,0.35); border-radius: 6px; padding: 10px 14px;
+  font-size: 12px; line-height: 1.5; color: #e0e6ed; max-width: 360px;
+  z-index: 200; opacity: 0; transition: opacity .1s; box-shadow: 0 6px 24px rgba(0,0,0,0.6);
+}
+#tooltip.visible { opacity: 1; }
+.tt-title { font-weight: 600; color: #4fc3f7; margin-bottom: 3px; font-size: 13px; }
+.tt-date { color: #78909c; font-size: 11px; }
+.tt-desc { margin-top: 4px; color: #b0bec5; font-size: 11px; }
+
+#info-panel {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: rgba(12,17,28,0.97); backdrop-filter: blur(12px);
+  border-top: 2px solid rgba(79,195,247,0.25); padding: 18px 28px 22px;
+  z-index: 150; transform: translateY(100%);
+  transition: transform .3s cubic-bezier(.4,0,.2,1); max-height: 38vh; overflow-y: auto;
+}
+#info-panel.open { transform: translateY(0); }
+.panel-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 8px; }
+.panel-title { font-size: 18px; font-weight: 700; color: #e0e6ed; }
+.panel-close { background: none; border: 1px solid rgba(255,255,255,0.12); color: #607080; font-size: 16px; cursor: pointer; padding: 2px 8px; border-radius: 4px; line-height: 1; }
+.panel-close:hover { color: #e0e6ed; border-color: rgba(255,255,255,0.3); }
+.panel-dates { font-size: 14px; color: #4fc3f7; margin-bottom: 4px; }
+.panel-duration { font-size: 12px; color: #607080; margin-bottom: 10px; }
+.panel-desc { font-size: 13px; color: #b0bec5; line-height: 1.6; margin-bottom: 12px; }
+.panel-perspective { background: rgba(79,195,247,0.06); border-left: 3px solid #4fc3f7; padding: 10px 14px; border-radius: 0 6px 6px 0; font-size: 13px; color: #78909c; margin-bottom: 12px; }
+.panel-perspective strong { color: #4fc3f7; }
+.panel-link { display: inline-block; color: #4fc3f7; text-decoration: none; font-size: 12px; border: 1px solid rgba(79,195,247,0.25); padding: 5px 12px; border-radius: 4px; }
+.panel-link:hover { background: rgba(79,195,247,0.12); }
+
+@keyframes pulse-ring { 0% { r: 5; opacity: .7; } 100% { r: 18; opacity: 0; } }
+.you-are-here-pulse { animation: pulse-ring 2s ease-out infinite; fill: none; stroke: #4fc3f7; stroke-width: 1.5; }
+
+.geo-bar { cursor: pointer; stroke: rgba(0,0,0,0.25); stroke-width: .5; }
+.geo-bar:hover { filter: brightness(1.15); }
+.geo-label { font-weight: 600; pointer-events: none; text-anchor: middle; dominant-baseline: central; }
+.event-marker { cursor: pointer; }
+.event-line { stroke-width: 1; opacity: .5; }
+.extinction-band { pointer-events: all; cursor: pointer; }
+.species-bar { cursor: pointer; rx: 3; ry: 3; }
+.species-bar:hover { filter: brightness(1.3); }
+.species-label { font-size: 10px; fill: #e0e6ed; pointer-events: none; dominant-baseline: central; }
+.axis line, .axis path { stroke: #1e2a38; }
+.axis text { fill: #506070; font-size: 11px; }
+
+#keyboard-hint { position: fixed; bottom: 8px; right: 14px; font-size: 10px; color: #37474f; z-index: 50; pointer-events: none; transition: opacity .3s; }
+#keyboard-hint kbd { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 3px; padding: 1px 4px; font-family: inherit; font-size: 10px; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(79,195,247,0.15); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<div id="nav-bar">
+  <span class="nav-title" id="nav-title">HISTORY OF LIFE</span>
+  <button class="nav-btn" data-eon="Hadean" id="btn-hadean">Hadean</button>
+  <button class="nav-btn" data-eon="Archean" id="btn-archean">Archean</button>
+  <button class="nav-btn" data-eon="Proterozoic" id="btn-proterozoic">Proterozoic</button>
+  <button class="nav-btn" data-eon="Phanerozoic" id="btn-phanerozoic">Phanerozoic</button>
+  <button class="nav-btn reset-btn" id="btn-reset">Reset</button>
+  <button class="nav-btn lang-btn" id="btn-lang">RU</button>
+  <div id="context-indicator"></div>
+</div>
+
+<div id="timeline-container"></div>
+<div id="opening-annotation"></div>
+
+<div id="tooltip">
+  <div class="tt-title"></div>
+  <div class="tt-date"></div>
+  <div class="tt-desc"></div>
+</div>
+
+<div id="info-panel">
+  <div class="panel-header">
+    <div class="panel-title"></div>
+    <button class="panel-close">&times;</button>
+  </div>
+  <div class="panel-dates"></div>
+  <div class="panel-duration"></div>
+  <div class="panel-desc"></div>
+  <div class="panel-perspective"></div>
+  <a class="panel-link" href="#" target="_blank" rel="noopener"></a>
+</div>
+
+<div id="keyboard-hint">
+  <kbd>+</kbd><kbd>-</kbd> zoom &nbsp;<kbd>&larr;</kbd><kbd>&rarr;</kbd> pan &nbsp;<kbd>Home</kbd> reset &nbsp;<kbd>1</kbd>-<kbd>4</kbd>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script>
+/* ═══════════════════════════════════════════════════════════════════════
+   i18n
+   ═══════════════════════════════════════════════════════════════════════ */
+let LANG = "en";
+
+const UI = {
+  en: {
+    title: "HISTORY OF LIFE",
+    hadean: "Hadean", archean: "Archean", proterozoic: "Proterozoic", phanerozoic: "Phanerozoic",
+    reset: "Reset", viewing: "Viewing", fullTimeline: "Full Timeline",
+    annotation: 'All of <strong>recorded human history</strong> (~5,000 years) occupies the last <strong>0.00011%</strong> of Earth\'s story — invisible at this scale. Scroll to zoom in.',
+    wikiLink: "Read more on Wikipedia &rarr;",
+    youAreHere: "YOU ARE HERE",
+    duration: "Duration",
+    severity: "Severity",
+    speciesLost: "of species lost",
+    clock24: "24-hour clock",
+    clockSpan: "If Earth's history were 24 hours, this spans",
+    clockAt: "If Earth's history were 24 hours, this happens at",
+    to: "to",
+    present: "Present",
+    ga: "Ga", ma: "Ma", ka: "Ka", yearsAgo: "years ago",
+    bilYears: "billion years", milYears: "million years", thouYears: "thousand years", years: "years",
+  },
+  ru: {
+    title: "ИСТОРИЯ ЖИЗНИ",
+    hadean: "Катархей", archean: "Архей", proterozoic: "Протерозой", phanerozoic: "Фанерозой",
+    reset: "Сброс", viewing: "Обзор", fullTimeline: "Вся шкала",
+    annotation: 'Вся <strong>письменная история человечества</strong> (~5 000 лет) занимает лишь <strong>0,00011%</strong> истории Земли — невидимая на этом масштабе. Прокрутите для увеличения.',
+    wikiLink: "Подробнее в Википедии &rarr;",
+    youAreHere: "ВЫ ЗДЕСЬ",
+    duration: "Длительность",
+    severity: "Масштаб",
+    speciesLost: "видов вымерло",
+    clock24: "24-часовые часы",
+    clockSpan: "Если бы история Земли уместилась в 24 часа, это длится с",
+    clockAt: "Если бы история Земли уместилась в 24 часа, это происходит в",
+    to: "до",
+    present: "Наше время",
+    ga: "млрд л.н.", ma: "млн л.н.", ka: "тыс. л.н.", yearsAgo: "лет назад",
+    bilYears: "млрд лет", milYears: "млн лет", thouYears: "тыс. лет", years: "лет",
+  }
+};
+
+function t(key) { return UI[LANG][key] || UI.en[key] || key; }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   DATA — each item has name (EN key), ru, description, descRu, wikiUrl, wikiRu
+   ═══════════════════════════════════════════════════════════════════════ */
+
+const GEOLOGICAL_TIME = [
+  { name: "Hadean", ru: "Катархей", start: 4540, end: 4000, color: "#AE1F7A",
+    wikiUrl: "https://en.wikipedia.org/wiki/Hadean", wikiRu: "https://ru.wikipedia.org/wiki/Катархей",
+    eras: [
+      { name: "Early Hadean", ru: "Ранний катархей", start: 4540, end: 4200, color: "#9E1A6E",
+        wikiUrl: "https://en.wikipedia.org/wiki/Hadean", wikiRu: "https://ru.wikipedia.org/wiki/Катархей",
+        periods: [{ name: "Pre-Nectarian", ru: "Донектарий", start: 4540, end: 4200, color: "#9E1A6E",
+          wikiUrl: "https://en.wikipedia.org/wiki/Pre-Nectarian", wikiRu: "https://ru.wikipedia.org/wiki/Донектарский_период" }] },
+      { name: "Late Hadean", ru: "Поздний катархей", start: 4200, end: 4000, color: "#B5297F",
+        wikiUrl: "https://en.wikipedia.org/wiki/Hadean", wikiRu: "https://ru.wikipedia.org/wiki/Катархей",
+        periods: [{ name: "Nectarian", ru: "Нектарий", start: 4200, end: 4000, color: "#B5297F",
+          wikiUrl: "https://en.wikipedia.org/wiki/Nectarian", wikiRu: "https://ru.wikipedia.org/wiki/Нектарский_период" }] }
+    ] },
+  { name: "Archean", ru: "Архей", start: 4000, end: 2500, color: "#F0047F",
+    wikiUrl: "https://en.wikipedia.org/wiki/Archean", wikiRu: "https://ru.wikipedia.org/wiki/Архей",
+    eras: [
+      { name: "Eoarchean", ru: "Эоархей", start: 4000, end: 3600, color: "#DA037B",
+        wikiUrl: "https://en.wikipedia.org/wiki/Eoarchean", wikiRu: "https://ru.wikipedia.org/wiki/Эоархей",
+        periods: [{ name: "Eoarchean", ru: "Эоархей", start: 4000, end: 3600, color: "#DA037B",
+          wikiUrl: "https://en.wikipedia.org/wiki/Eoarchean", wikiRu: "https://ru.wikipedia.org/wiki/Эоархей" }] },
+      { name: "Paleoarchean", ru: "Палеоархей", start: 3600, end: 3200, color: "#F23F97",
+        wikiUrl: "https://en.wikipedia.org/wiki/Paleoarchean", wikiRu: "https://ru.wikipedia.org/wiki/Палеоархей",
+        periods: [{ name: "Paleoarchean", ru: "Палеоархей", start: 3600, end: 3200, color: "#F23F97",
+          wikiUrl: "https://en.wikipedia.org/wiki/Paleoarchean", wikiRu: "https://ru.wikipedia.org/wiki/Палеоархей" }] },
+      { name: "Mesoarchean", ru: "Мезоархей", start: 3200, end: 2800, color: "#F774AC",
+        wikiUrl: "https://en.wikipedia.org/wiki/Mesoarchean", wikiRu: "https://ru.wikipedia.org/wiki/Мезоархей",
+        periods: [{ name: "Mesoarchean", ru: "Мезоархей", start: 3200, end: 2800, color: "#F774AC",
+          wikiUrl: "https://en.wikipedia.org/wiki/Mesoarchean", wikiRu: "https://ru.wikipedia.org/wiki/Мезоархей" }] },
+      { name: "Neoarchean", ru: "Неоархей", start: 2800, end: 2500, color: "#F99BC1",
+        wikiUrl: "https://en.wikipedia.org/wiki/Neoarchean", wikiRu: "https://ru.wikipedia.org/wiki/Неоархей",
+        periods: [{ name: "Neoarchean", ru: "Неоархей", start: 2800, end: 2500, color: "#F99BC1",
+          wikiUrl: "https://en.wikipedia.org/wiki/Neoarchean", wikiRu: "https://ru.wikipedia.org/wiki/Неоархей" }] }
+    ] },
+  { name: "Proterozoic", ru: "Протерозой", start: 2500, end: 538.8, color: "#F73F8C",
+    wikiUrl: "https://en.wikipedia.org/wiki/Proterozoic", wikiRu: "https://ru.wikipedia.org/wiki/Протерозой",
+    eras: [
+      { name: "Paleoproterozoic", ru: "Палеопротерозой", start: 2500, end: 1600, color: "#F74370",
+        wikiUrl: "https://en.wikipedia.org/wiki/Paleoproterozoic", wikiRu: "https://ru.wikipedia.org/wiki/Палеопротерозой",
+        periods: [
+          { name: "Siderian", ru: "Сидерий", start: 2500, end: 2300, color: "#F6887C", wikiUrl: "https://en.wikipedia.org/wiki/Siderian", wikiRu: "https://ru.wikipedia.org/wiki/Сидерий" },
+          { name: "Rhyacian", ru: "Риасий", start: 2300, end: 2050, color: "#F6A489", wikiUrl: "https://en.wikipedia.org/wiki/Rhyacian", wikiRu: "https://ru.wikipedia.org/wiki/Риасий" },
+          { name: "Orosirian", ru: "Орозирий", start: 2050, end: 1800, color: "#F6BC96", wikiUrl: "https://en.wikipedia.org/wiki/Orosirian", wikiRu: "https://ru.wikipedia.org/wiki/Орозирий" },
+          { name: "Statherian", ru: "Статерий", start: 1800, end: 1600, color: "#F6D4A5", wikiUrl: "https://en.wikipedia.org/wiki/Statherian", wikiRu: "https://ru.wikipedia.org/wiki/Статерий" }
+        ] },
+      { name: "Mesoproterozoic", ru: "Мезопротерозой", start: 1600, end: 1000, color: "#FDB462",
+        wikiUrl: "https://en.wikipedia.org/wiki/Mesoproterozoic", wikiRu: "https://ru.wikipedia.org/wiki/Мезопротерозой",
+        periods: [
+          { name: "Calymmian", ru: "Калимий", start: 1600, end: 1400, color: "#FDC07A", wikiUrl: "https://en.wikipedia.org/wiki/Calymmian", wikiRu: "https://ru.wikipedia.org/wiki/Калимий" },
+          { name: "Ectasian", ru: "Эктазий", start: 1400, end: 1200, color: "#FDCC92", wikiUrl: "https://en.wikipedia.org/wiki/Ectasian", wikiRu: "https://ru.wikipedia.org/wiki/Эктазий" },
+          { name: "Stenian", ru: "Стений", start: 1200, end: 1000, color: "#FDD8AA", wikiUrl: "https://en.wikipedia.org/wiki/Stenian", wikiRu: "https://ru.wikipedia.org/wiki/Стений" }
+        ] },
+      { name: "Neoproterozoic", ru: "Неопротерозой", start: 1000, end: 538.8, color: "#FEB342",
+        wikiUrl: "https://en.wikipedia.org/wiki/Neoproterozoic", wikiRu: "https://ru.wikipedia.org/wiki/Неопротерозой",
+        periods: [
+          { name: "Tonian", ru: "Тоний", start: 1000, end: 720, color: "#FEC67A", wikiUrl: "https://en.wikipedia.org/wiki/Tonian", wikiRu: "https://ru.wikipedia.org/wiki/Тоний" },
+          { name: "Cryogenian", ru: "Криогений", start: 720, end: 635, color: "#FED990", wikiUrl: "https://en.wikipedia.org/wiki/Cryogenian", wikiRu: "https://ru.wikipedia.org/wiki/Криогений" },
+          { name: "Ediacaran", ru: "Эдиакарий", start: 635, end: 538.8, color: "#FEE6AA", wikiUrl: "https://en.wikipedia.org/wiki/Ediacaran", wikiRu: "https://ru.wikipedia.org/wiki/Эдиакарий" }
+        ] }
+    ] },
+  { name: "Phanerozoic", ru: "Фанерозой", start: 538.8, end: 0, color: "#9ED682",
+    wikiUrl: "https://en.wikipedia.org/wiki/Phanerozoic", wikiRu: "https://ru.wikipedia.org/wiki/Фанерозой",
+    eras: [
+      { name: "Paleozoic", ru: "Палеозой", start: 538.8, end: 251.9, color: "#99C08D",
+        wikiUrl: "https://en.wikipedia.org/wiki/Paleozoic", wikiRu: "https://ru.wikipedia.org/wiki/Палеозой",
+        periods: [
+          { name: "Cambrian", ru: "Кембрий", start: 538.8, end: 485.4, color: "#7FA056", wikiUrl: "https://en.wikipedia.org/wiki/Cambrian", wikiRu: "https://ru.wikipedia.org/wiki/Кембрийский_период" },
+          { name: "Ordovician", ru: "Ордовик", start: 485.4, end: 443.8, color: "#009270", wikiUrl: "https://en.wikipedia.org/wiki/Ordovician", wikiRu: "https://ru.wikipedia.org/wiki/Ордовикский_период" },
+          { name: "Silurian", ru: "Силур", start: 443.8, end: 419.2, color: "#B3E1B6", wikiUrl: "https://en.wikipedia.org/wiki/Silurian", wikiRu: "https://ru.wikipedia.org/wiki/Силурийский_период" },
+          { name: "Devonian", ru: "Девон", start: 419.2, end: 358.9, color: "#CB8C37", wikiUrl: "https://en.wikipedia.org/wiki/Devonian", wikiRu: "https://ru.wikipedia.org/wiki/Девонский_период" },
+          { name: "Carboniferous", ru: "Карбон", start: 358.9, end: 298.9, color: "#67A599", wikiUrl: "https://en.wikipedia.org/wiki/Carboniferous", wikiRu: "https://ru.wikipedia.org/wiki/Каменноугольный_период" },
+          { name: "Permian", ru: "Пермь", start: 298.9, end: 251.9, color: "#F04028", wikiUrl: "https://en.wikipedia.org/wiki/Permian", wikiRu: "https://ru.wikipedia.org/wiki/Пермский_период" }
+        ] },
+      { name: "Mesozoic", ru: "Мезозой", start: 251.9, end: 66, color: "#67C5CA",
+        wikiUrl: "https://en.wikipedia.org/wiki/Mesozoic", wikiRu: "https://ru.wikipedia.org/wiki/Мезозой",
+        periods: [
+          { name: "Triassic", ru: "Триас", start: 251.9, end: 201.4, color: "#812B92", wikiUrl: "https://en.wikipedia.org/wiki/Triassic", wikiRu: "https://ru.wikipedia.org/wiki/Триасовый_период" },
+          { name: "Jurassic", ru: "Юра", start: 201.4, end: 145, color: "#34B2C9", wikiUrl: "https://en.wikipedia.org/wiki/Jurassic", wikiRu: "https://ru.wikipedia.org/wiki/Юрский_период" },
+          { name: "Cretaceous", ru: "Мел", start: 145, end: 66, color: "#7FC64E", wikiUrl: "https://en.wikipedia.org/wiki/Cretaceous", wikiRu: "https://ru.wikipedia.org/wiki/Меловой_период" }
+        ] },
+      { name: "Cenozoic", ru: "Кайнозой", start: 66, end: 0, color: "#F2F91D",
+        wikiUrl: "https://en.wikipedia.org/wiki/Cenozoic", wikiRu: "https://ru.wikipedia.org/wiki/Кайнозой",
+        periods: [
+          { name: "Paleogene", ru: "Палеоген", start: 66, end: 23.03, color: "#FD9A52", wikiUrl: "https://en.wikipedia.org/wiki/Paleogene", wikiRu: "https://ru.wikipedia.org/wiki/Палеогеновый_период" },
+          { name: "Neogene", ru: "Неоген", start: 23.03, end: 2.58, color: "#FFE619", wikiUrl: "https://en.wikipedia.org/wiki/Neogene", wikiRu: "https://ru.wikipedia.org/wiki/Неогеновый_период" },
+          { name: "Quaternary", ru: "Четвертичный", start: 2.58, end: 0, color: "#F9F97F", wikiUrl: "https://en.wikipedia.org/wiki/Quaternary", wikiRu: "https://ru.wikipedia.org/wiki/Четвертичный_период" }
+        ] }
+    ] }
+];
+
+const KEY_EVENTS = [
+  { name: "Formation of Earth", ru: "Формирование Земли", date: 4540, type: "planetary",
+    description: "Accretion of Earth from the solar nebula over millions of years.",
+    descRu: "Аккреция Земли из солнечной туманности в результате столкновений планетезималей.",
+    wikiUrl: "https://en.wikipedia.org/wiki/History_of_Earth", wikiRu: "https://ru.wikipedia.org/wiki/История_Земли" },
+  { name: "Formation of the Moon", ru: "Формирование Луны", date: 4510, type: "planetary",
+    description: "A Mars-sized body (Theia) collides with proto-Earth, ejecting debris that forms the Moon.",
+    descRu: "Тело размером с Марс (Тейя) сталкивается с прото-Землёй, выбрасывая обломки, из которых формируется Луна.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Giant-impact_hypothesis", wikiRu: "https://ru.wikipedia.org/wiki/Гипотеза_гигантского_столкновения" },
+  { name: "First Liquid Oceans", ru: "Первые океаны", date: 4400, type: "planetary",
+    description: "Water condenses on Earth's cooling surface. Zircon crystals provide evidence.",
+    descRu: "Вода конденсируется на остывающей поверхности Земли. Кристаллы циркона — свидетельство.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Origin_of_water_on_Earth", wikiRu: "https://ru.wikipedia.org/wiki/Происхождение_воды_на_Земле" },
+  { name: "Late Heavy Bombardment", ru: "Поздняя тяжёлая бомбардировка", date: 4100, type: "planetary",
+    description: "A spike in asteroid impacts scarring the inner solar system.",
+    descRu: "Всплеск астероидной бомбардировки внутренней Солнечной системы.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Late_Heavy_Bombardment", wikiRu: "https://ru.wikipedia.org/wiki/Поздняя_тяжёлая_бомбардировка" },
+  { name: "Origin of Life", ru: "Зарождение жизни", date: 3800, type: "origin",
+    description: "Isotopic signatures suggest primitive microorganisms existed 3.8 billion years ago.",
+    descRu: "Изотопные следы указывают на существование примитивных микроорганизмов 3,8 млрд лет назад.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Abiogenesis", wikiRu: "https://ru.wikipedia.org/wiki/Абиогенез" },
+  { name: "First Photosynthesis", ru: "Первый фотосинтез", date: 3500, type: "origin",
+    description: "Cyanobacteria evolve oxygenic photosynthesis, transforming Earth's atmosphere.",
+    descRu: "Цианобактерии вырабатывают кислородный фотосинтез, начиная преобразование атмосферы.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Photosynthesis#Early_evolution", wikiRu: "https://ru.wikipedia.org/wiki/Фотосинтез" },
+  { name: "Great Oxidation Event", ru: "Кислородная катастрофа", date: 2400, type: "planetary",
+    description: "Oxygen accumulates in atmosphere for the first time, causing mass die-off of anaerobic life.",
+    descRu: "Кислород впервые накапливается в атмосфере, вызывая массовую гибель анаэробных организмов.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Great_Oxidation_Event", wikiRu: "https://ru.wikipedia.org/wiki/Кислородная_катастрофа" },
+  { name: "First Eukaryotes", ru: "Первые эукариоты", date: 2100, type: "origin",
+    description: "Cells with nuclei appear — likely through endosymbiosis. Pivotal step toward complex life.",
+    descRu: "Появляются клетки с ядром — вероятно, через эндосимбиоз. Ключевой шаг к сложной жизни.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Eukaryote", wikiRu: "https://ru.wikipedia.org/wiki/Эукариоты" },
+  { name: "First Multicellular Life", ru: "Первые многоклеточные", date: 1500, type: "origin",
+    description: "Simple multicellular organisms emerge with cooperating, specializing cells.",
+    descRu: "Появляются простые многоклеточные организмы с кооперирующимися клетками.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Multicellular_organism", wikiRu: "https://ru.wikipedia.org/wiki/Многоклеточный_организм" },
+  { name: "Snowball Earth (Sturtian)", ru: "Земля-снежок (Стуртское)", date: 717, type: "planetary",
+    description: "Earth freezes almost entirely, ice reaching the equator.",
+    descRu: "Земля почти полностью замерзает, лёд доходит до экватора.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Snowball_Earth", wikiRu: "https://ru.wikipedia.org/wiki/Земля-снежок" },
+  { name: "Snowball Earth (Marinoan)", ru: "Земля-снежок (Мариноанское)", date: 650, type: "planetary",
+    description: "A second global glaciation. May have driven the evolution of the first animals.",
+    descRu: "Второе глобальное оледенение. Возможно, подтолкнуло эволюцию первых животных.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Snowball_Earth", wikiRu: "https://ru.wikipedia.org/wiki/Земля-снежок" },
+  { name: "First Animals", ru: "Первые животные", date: 600, type: "origin",
+    description: "The Ediacaran biota — Earth's first complex animals: soft-bodied, unlike anything alive today.",
+    descRu: "Эдиакарская биота — первые сложные животные Земли: мягкотелые, не похожие ни на что современное.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Ediacaran_biota", wikiRu: "https://ru.wikipedia.org/wiki/Эдиакарская_биота" },
+  { name: "Cambrian Explosion", ru: "Кембрийский взрыв", date: 538, type: "origin",
+    description: "Nearly all modern animal phyla appear in ~20 million years.",
+    descRu: "Почти все современные типы животных появляются за ~20 миллионов лет.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Cambrian_explosion", wikiRu: "https://ru.wikipedia.org/wiki/Кембрийский_взрыв" },
+  { name: "First Fish", ru: "Первые рыбы", date: 530, type: "origin",
+    description: "Jawless fish — the first vertebrates, ancestors of all vertebrates including humans.",
+    descRu: "Бесчелюстные рыбы — первые позвоночные, предки всех позвоночных, включая человека.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Ostracoderm", wikiRu: "https://ru.wikipedia.org/wiki/Остракодермы" },
+  { name: "First Land Plants", ru: "Первые наземные растения", date: 470, type: "origin",
+    description: "Simple plants colonize land, beginning the greening of Earth's continents.",
+    descRu: "Простые растения заселяют сушу, начиная озеленение континентов.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Evolutionary_history_of_plants", wikiRu: "https://ru.wikipedia.org/wiki/Эволюция_растений" },
+  { name: "First Insects", ru: "Первые насекомые", date: 407, type: "origin",
+    description: "The oldest known insects — the most species-rich lineage on Earth.",
+    descRu: "Древнейшие известные насекомые — самая многовидовая группа на Земле.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Insect#Evolution", wikiRu: "https://ru.wikipedia.org/wiki/Насекомые" },
+  { name: "First Amphibians", ru: "Первые амфибии", date: 370, type: "origin",
+    description: "Fish with limb-like fins crawl onto land — Tiktaalik bridges water and land.",
+    descRu: "Рыбы с конечностеподобными плавниками выходят на сушу — тиктаалик связывает воду и землю.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Amphibian", wikiRu: "https://ru.wikipedia.org/wiki/Земноводные" },
+  { name: "First Reptiles", ru: "Первые рептилии", date: 312, type: "origin",
+    description: "Amniotic eggs free vertebrates from water. Reptiles radiate across Pangaea.",
+    descRu: "Амниотическое яйцо освобождает позвоночных от воды. Рептилии расселяются по Пангее.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Reptile", wikiRu: "https://ru.wikipedia.org/wiki/Пресмыкающиеся" },
+  { name: "First Dinosaurs", ru: "Первые динозавры", date: 233, type: "origin",
+    description: "Small bipedal dinosaurs appear. Within 30 million years they dominate all land ecosystems.",
+    descRu: "Появляются небольшие двуногие динозавры. Через 30 млн лет они доминируют на суше.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Dinosaur", wikiRu: "https://ru.wikipedia.org/wiki/Динозавры" },
+  { name: "First Mammals", ru: "Первые млекопитающие", date: 225, type: "origin",
+    description: "Tiny nocturnal mammals evolve alongside early dinosaurs. Small for 160 million years.",
+    descRu: "Крошечные ночные млекопитающие появляются рядом с динозаврами. Остаются мелкими 160 млн лет.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Mammal", wikiRu: "https://ru.wikipedia.org/wiki/Млекопитающие" },
+  { name: "First Birds", ru: "Первые птицы", date: 160, type: "origin",
+    description: "Feathered dinosaurs take flight. Archaeopteryx — ancestor of all modern birds.",
+    descRu: "Оперённые динозавры поднимаются в воздух. Археоптерикс — предок всех современных птиц.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Bird", wikiRu: "https://ru.wikipedia.org/wiki/Птицы" },
+  { name: "First Flowering Plants", ru: "Первые цветковые", date: 130, type: "origin",
+    description: "Angiosperms appear, co-evolving with insect pollinators.",
+    descRu: "Появляются покрытосеменные, ко-эволюционируя с насекомыми-опылителями.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Flowering_plant", wikiRu: "https://ru.wikipedia.org/wiki/Цветковые_растения" },
+  { name: "First Grasses", ru: "Первые злаки", date: 66, type: "origin",
+    description: "Grasses evolve, eventually reshaping continents into vast grasslands.",
+    descRu: "Появляются злаки, со временем превращающие континенты в обширные степи.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Poaceae", wikiRu: "https://ru.wikipedia.org/wiki/Злаки" },
+  { name: "First Primates", ru: "Первые приматы", date: 55, type: "origin",
+    description: "Small tree-dwelling primates with grasping hands and forward-facing eyes.",
+    descRu: "Мелкие древесные приматы с цепкими руками и направленными вперёд глазами.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Primate", wikiRu: "https://ru.wikipedia.org/wiki/Приматы" },
+  { name: "First Hominids", ru: "Первые гоминиды", date: 7, type: "origin",
+    description: "Human lineage splits from chimpanzees. Sahelanthropus walks upright.",
+    descRu: "Линия человека отделяется от шимпанзе. Сахелантроп ходит прямо.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Hominidae", wikiRu: "https://ru.wikipedia.org/wiki/Гоминиды" },
+  { name: "First Stone Tools", ru: "Первые каменные орудия", date: 3.3, type: "origin",
+    description: "Oldest stone tools (Lomekwian) in Kenya, predating the genus Homo.",
+    descRu: "Древнейшие каменные орудия (Ломеквиан) в Кении, старше рода Homo.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Lomekwian", wikiRu: "https://ru.wikipedia.org/wiki/Ломеквийская_культура" },
+  { name: "Homo Sapiens", ru: "Человек разумный", date: 0.3, type: "origin",
+    description: "Anatomically modern humans appear in Africa ~300,000 years ago.",
+    descRu: "Анатомически современные люди появляются в Африке ~300 000 лет назад.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Homo_sapiens", wikiRu: "https://ru.wikipedia.org/wiki/Человек_разумный" },
+  { name: "Agriculture", ru: "Земледелие", date: 0.012, type: "origin",
+    description: "Humans domesticate plants and animals ~12,000 years ago, launching civilization.",
+    descRu: "Люди одомашнивают растения и животных ~12 000 лет назад, начиная цивилизацию.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Neolithic_Revolution", wikiRu: "https://ru.wikipedia.org/wiki/Неолитическая_революция" },
+  { name: "Written History", ru: "Письменная история", date: 0.005, type: "origin",
+    description: "Writing invented in Sumer ~5,000 years ago. All 'recorded history' fits in this sliver.",
+    descRu: "Письменность изобретена в Шумере ~5 000 лет назад. Вся «записанная история» — в этой щели.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Recorded_history", wikiRu: "https://ru.wikipedia.org/wiki/Письменная_история" },
+  // Big 5
+  { name: "End-Ordovician Extinction", ru: "Ордовикское вымирание", date: 444, type: "extinction", severity: 86,
+    description: "~86% of species lost. Glaciation devastates marine life.",
+    descRu: "~86% видов погибло. Оледенение опустошает морскую жизнь.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Ordovician%E2%80%93Silurian_extinction_events", wikiRu: "https://ru.wikipedia.org/wiki/Ордовикско-силурийское_вымирание" },
+  { name: "Late Devonian Extinction", ru: "Девонское вымирание", date: 372, type: "extinction", severity: 75,
+    description: "~75% of species lost. Reef ecosystems collapse.",
+    descRu: "~75% видов погибло. Рифовые экосистемы рушатся.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Late_Devonian_extinction", wikiRu: "https://ru.wikipedia.org/wiki/Девонское_вымирание" },
+  { name: "End-Permian Extinction", ru: "Пермское вымирание", date: 252, type: "extinction", severity: 96,
+    description: "The 'Great Dying' — ~96% of marine species perish. Worst mass extinction ever.",
+    descRu: "«Великое вымирание» — ~96% морских видов погибает. Крупнейшее вымирание в истории.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Permian%E2%80%93Triassic_extinction_event", wikiRu: "https://ru.wikipedia.org/wiki/Массовое_пермское_вымирание" },
+  { name: "End-Triassic Extinction", ru: "Триасовое вымирание", date: 201, type: "extinction", severity: 80,
+    description: "~80% of species lost. Clears the way for dinosaur dominance.",
+    descRu: "~80% видов погибло. Расчищает путь для доминирования динозавров.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Triassic%E2%80%93Jurassic_extinction_event", wikiRu: "https://ru.wikipedia.org/wiki/Триасовое_вымирание" },
+  { name: "End-Cretaceous Extinction", ru: "Мел-палеогеновое вымирание", date: 66, type: "extinction", severity: 76,
+    description: "~76% of species lost including all non-avian dinosaurs. Mammals inherit the Earth.",
+    descRu: "~76% видов погибло, включая всех нептичьих динозавров. Млекопитающие наследуют Землю.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Cretaceous%E2%80%93Paleogene_extinction_event", wikiRu: "https://ru.wikipedia.org/wiki/Мел-палеогеновое_вымирание" }
+];
+
+const DOMINANT_SPECIES = [
+  { name: "Cyanobacteria", ru: "Цианобактерии", start: 3500, end: 1800, color: "#2e7d32",
+    description: "Photosynthetic bacteria that oxygenated Earth's atmosphere.", descRu: "Фотосинтезирующие бактерии, насытившие атмосферу кислородом.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Cyanobacteria", wikiRu: "https://ru.wikipedia.org/wiki/Цианобактерии" },
+  { name: "Stromatolites", ru: "Строматолиты", start: 3500, end: 1000, color: "#388e3c",
+    description: "Layered microbial mats — dominant reef-builders for 2+ billion years.", descRu: "Слоистые микробные маты — главные рифостроители 2+ млрд лет.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Stromatolite", wikiRu: "https://ru.wikipedia.org/wiki/Строматолиты" },
+  { name: "Trilobites", ru: "Трилобиты", start: 521, end: 252, color: "#5d4037",
+    description: "Armored arthropods, 270 million years, 20,000+ species.", descRu: "Панцирные членистоногие, 270 млн лет, 20 000+ видов.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Trilobite", wikiRu: "https://ru.wikipedia.org/wiki/Трилобиты" },
+  { name: "Eurypterids", ru: "Ракоскорпионы", start: 470, end: 252, color: "#6d4c41",
+    description: "Giant sea scorpions — top predators up to 2.5m.", descRu: "Гигантские морские скорпионы — хищники до 2,5 м.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Eurypterid", wikiRu: "https://ru.wikipedia.org/wiki/Ракоскорпионы" },
+  { name: "Placoderms", ru: "Плакодермы", start: 440, end: 359, color: "#455a64",
+    description: "First jawed vertebrates. Dunkleosteus: 6m, strongest bite.", descRu: "Первые челюстные позвоночные. Дунклеостей: 6 м, сильнейший укус.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Placodermi", wikiRu: "https://ru.wikipedia.org/wiki/Плакодермы" },
+  { name: "Sharks", ru: "Акулы", start: 420, end: 0, color: "#546e7a",
+    description: "Apex ocean predators for 400+ million years — older than trees.", descRu: "Вершинные хищники океана 400+ млн лет — старше деревьев.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Shark", wikiRu: "https://ru.wikipedia.org/wiki/Акулы" },
+  { name: "Ferns & Lycopsids", ru: "Папоротники и плауны", start: 390, end: 300, color: "#33691e",
+    description: "Giant tree ferns dominate Carboniferous swamps, forming today's coal.", descRu: "Гигантские древовидные папоротники господствуют в каменноугольных болотах.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Carboniferous_rainforest_collapse", wikiRu: "https://ru.wikipedia.org/wiki/Каменноугольный_период" },
+  { name: "Amphibians (dominant)", ru: "Амфибии (доминир.)", start: 340, end: 280, color: "#558b2f",
+    description: "Large amphibians rule coal swamps. Eryops: 2m apex predator.", descRu: "Крупные амфибии правят угольными болотами. Эриопс: 2 м хищник.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Temnospondyli", wikiRu: "https://ru.wikipedia.org/wiki/Темноспондильные" },
+  { name: "Synapsids", ru: "Синапсиды", start: 310, end: 252, color: "#795548",
+    description: "Proto-mammals including Dimetrodon. Our direct ancestors.", descRu: "Протомлекопитающие, включая диметродона. Наши прямые предки.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Synapsid", wikiRu: "https://ru.wikipedia.org/wiki/Синапсиды" },
+  { name: "Dinosaurs", ru: "Динозавры", start: 233, end: 66, color: "#e65100",
+    description: "Dominant land animals for 167 million years.", descRu: "Доминирующие наземные животные 167 млн лет.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Dinosaur", wikiRu: "https://ru.wikipedia.org/wiki/Динозавры" },
+  { name: "Pterosaurs", ru: "Птерозавры", start: 228, end: 66, color: "#bf360c",
+    description: "First flying vertebrates. Quetzalcoatlus: 10m wingspan.", descRu: "Первые летающие позвоночные. Кетцалькоатль: размах крыльев 10 м.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Pterosaur", wikiRu: "https://ru.wikipedia.org/wiki/Птерозавры" },
+  { name: "Ammonites", ru: "Аммониты", start: 400, end: 66, color: "#4e342e",
+    description: "Coiled cephalopods thriving 340 million years.", descRu: "Спиральные головоногие, процветавшие 340 млн лет.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Ammonoidea", wikiRu: "https://ru.wikipedia.org/wiki/Аммониты" },
+  { name: "Mammals (dominant)", ru: "Млекопитающие (доминир.)", start: 66, end: 0, color: "#d84315",
+    description: "After K-Pg, mammals fill every niche left by dinosaurs.", descRu: "После мел-палеогенового вымирания млекопитающие занимают все ниши.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Mammal", wikiRu: "https://ru.wikipedia.org/wiki/Млекопитающие" },
+  { name: "Birds", ru: "Птицы", start: 66, end: 0, color: "#00838f",
+    description: "The only surviving dinosaurs. 10,000+ species.", descRu: "Единственные выжившие динозавры. 10 000+ видов.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Bird", wikiRu: "https://ru.wikipedia.org/wiki/Птицы" },
+  { name: "Flowering Plants", ru: "Цветковые растения", start: 130, end: 0, color: "#c62828",
+    description: "90% of all plant species today are angiosperms.", descRu: "90% всех видов растений сегодня — покрытосеменные.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Flowering_plant", wikiRu: "https://ru.wikipedia.org/wiki/Цветковые_растения" },
+  { name: "Grasses", ru: "Злаки", start: 55, end: 0, color: "#9e9d24",
+    description: "Grasslands reshape continents, driving grazer evolution.", descRu: "Степи преобразуют континенты, направляя эволюцию травоядных.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Poaceae", wikiRu: "https://ru.wikipedia.org/wiki/Злаки" },
+  { name: "Whales", ru: "Киты", start: 50, end: 0, color: "#0277bd",
+    description: "From dog-sized land mammals to the largest animals ever.", descRu: "От наземных млекопитающих размером с собаку — до крупнейших животных в истории.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Whale", wikiRu: "https://ru.wikipedia.org/wiki/Китообразные" },
+  { name: "Great Apes", ru: "Человекообразные", start: 15, end: 0, color: "#4a148c",
+    description: "Orangutans, gorillas, chimps, and humans.", descRu: "Орангутаны, гориллы, шимпанзе и люди.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Hominidae", wikiRu: "https://ru.wikipedia.org/wiki/Гоминиды" },
+  { name: "Hominids", ru: "Гоминины", start: 7, end: 0, color: "#6a1b9a",
+    description: "Upright-walking human ancestors.", descRu: "Прямоходящие предки человека.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Hominini", wikiRu: "https://ru.wikipedia.org/wiki/Гоминини" },
+  { name: "Homo Sapiens", ru: "Человек разумный", start: 0.3, end: 0, color: "#8e24aa",
+    description: "300,000 years on a 4.54-billion-year-old planet.", descRu: "300 000 лет на планете возрастом 4,54 млрд лет.",
+    wikiUrl: "https://en.wikipedia.org/wiki/Homo_sapiens", wikiRu: "https://ru.wikipedia.org/wiki/Человек_разумный" }
+];
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   HELPERS
+   ═══════════════════════════════════════════════════════════════════════ */
+
+function N(d) { return LANG === "ru" && d.ru ? d.ru : d.name; }
+function Desc(d) { return LANG === "ru" && d.descRu ? d.descRu : (d.description || ""); }
+function Wiki(d) { return LANG === "ru" && d.wikiRu ? d.wikiRu : (d.wikiUrl || ""); }
+
+function flattenGeology() {
+  const f = [];
+  GEOLOGICAL_TIME.forEach(eon => {
+    f.push({ ...eon, level: "eon" });
+    (eon.eras || []).forEach(era => {
+      f.push({ ...era, level: "era" });
+      (era.periods || []).forEach(p => f.push({ ...p, level: "period" }));
+    });
+  });
+  return f;
+}
+
+function formatMa(ma) {
+  if (ma >= 1000) return (ma / 1000).toFixed(ma % 1000 === 0 ? 0 : 1) + " " + t("ga");
+  if (ma >= 1) return ma.toFixed(ma >= 10 ? 0 : 1) + " " + t("ma");
+  if (ma >= 0.001) return (ma * 1000).toFixed(0) + " " + t("ka");
+  if (ma > 0) return (ma * 1e6).toFixed(0) + " " + t("yearsAgo");
+  return t("present");
+}
+
+function formatDuration(s, e) {
+  const d = s - e;
+  if (d >= 1000) return (d / 1000).toFixed(1) + " " + t("bilYears");
+  if (d >= 1) return d.toFixed(d >= 10 ? 0 : 1) + " " + t("milYears");
+  if (d >= 0.001) return (d * 1000).toFixed(0) + " " + t("thouYears");
+  return (d * 1e6).toFixed(0) + " " + t("years");
+}
+
+function to24Hour(ma) {
+  const sec = ((4540 - ma) / 4540) * 86400;
+  const h = String(Math.floor(sec / 3600)).padStart(2, '0');
+  const m = String(Math.floor((sec % 3600) / 60)).padStart(2, '0');
+  const s = String(Math.floor(sec % 60)).padStart(2, '0');
+  if (ma < 0.001) return `${h}:${m}:${s}.${String(Math.round((sec % 1) * 1000)).padStart(3, '0')}`;
+  return `${h}:${m}:${s}`;
+}
+
+function contrastColor(hex) {
+  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  return (0.299*r + 0.587*g + 0.114*b) / 255 > 0.5 ? "#1a1a2e" : "#f0f0f0";
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   VISUALIZATION
+   ═══════════════════════════════════════════════════════════════════════ */
+
+(function() {
+  const container = document.getElementById("timeline-container");
+  const tooltip = document.getElementById("tooltip");
+  const infoPanel = document.getElementById("info-panel");
+  const annotation = document.getElementById("opening-annotation");
+  const kbHint = document.getElementById("keyboard-hint");
+
+  const margin = { top: 14, right: 30, bottom: 40, left: 30 };
+  let W, H, iW, iH;
+  function dims() { const r = container.getBoundingClientRect(); W = r.width; H = r.height; iW = W - margin.left - margin.right; iH = H - margin.top - margin.bottom; }
+  dims();
+
+  const EON_H = 50, ERA_H = 34, PER_H = 26, GAP = 3;
+  const EON_Y = 0, ERA_Y = EON_H + GAP, PER_Y = ERA_Y + ERA_H + GAP;
+  const EVT_Y = PER_Y + PER_H + 16;
+  const EVT_H = Math.max(100, Math.min(200, iH * 0.22));
+  const SP_Y = EVT_Y + EVT_H + 12, SP_LANE = 18, SP_GAP = 3;
+  const AXIS_Y = iH - 10;
+
+  const svg = d3.select(container).append("svg").attr("width", W).attr("height", H);
+  const defs = svg.append("defs");
+  defs.append("clipPath").attr("id", "clip").append("rect").attr("width", iW).attr("height", iH + margin.top + margin.bottom);
+  const filt = defs.append("filter").attr("id", "glow").attr("x", "-50%").attr("y", "-20%").attr("width", "200%").attr("height", "140%");
+  filt.append("feGaussianBlur").attr("stdDeviation", "4").attr("result", "blur");
+  filt.append("feMerge").selectAll("feMergeNode").data(["blur", "SourceGraphic"]).enter().append("feMergeNode").attr("in", d => d);
+
+  const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`).attr("clip-path", "url(#clip)");
+
+  const xBase = d3.scalePow().exponent(0.5).domain([4540, 0]).range([0, iW]);
+  let xScale = xBase.copy(), curT = d3.zoomIdentity;
+
+  const geoFlat = flattenGeology();
+  const eons = geoFlat.filter(d => d.level === "eon");
+  const eras = geoFlat.filter(d => d.level === "era");
+  const periods = geoFlat.filter(d => d.level === "period");
+
+  function stackSpecies(data) {
+    const sorted = [...data].sort((a, b) => b.start - a.start);
+    const lanes = [];
+    sorted.forEach(sp => {
+      let placed = false;
+      for (let i = 0; i < lanes.length; i++) {
+        if (!lanes[i].some(o => !(sp.end >= o.start || sp.start <= o.end))) { lanes[i].push(sp); sp._lane = i; placed = true; break; }
+      }
+      if (!placed) { sp._lane = lanes.length; lanes.push([sp]); }
+    });
+    return sorted;
+  }
+  const speciesArr = stackSpecies(DOMINANT_SPECIES);
+
+  const gGrid = g.append("g"), gExtinct = g.append("g"), gEonG = g.append("g"), gEraG = g.append("g"), gPerG = g.append("g"), gEvtG = g.append("g"), gSpG = g.append("g"), gMarker = g.append("g");
+  const gAxisG = g.append("g").attr("class", "axis").attr("transform", `translate(0,${AXIS_Y})`);
+
+  function renderGeo(group, data, y, h, cls) {
+    const sel = group.selectAll(`.${cls}`).data(data, d => d.name);
+    const ent = sel.enter().append("g").attr("class", cls);
+    ent.append("rect").attr("class", "geo-bar");
+    ent.append("text").attr("class", "geo-label");
+    const all = ent.merge(sel);
+    all.select("rect").attr("x", d => xScale(d.start)).attr("y", y)
+      .attr("width", d => Math.max(0, xScale(d.end) - xScale(d.start))).attr("height", h).attr("fill", d => d.color)
+      .on("mouseover", (ev, d) => showTT(ev, d, "geo")).on("mousemove", moveTT).on("mouseout", hideTT)
+      .on("click", (ev, d) => { ev.stopPropagation(); zoomTo(d.start, d.end); showPanel(d, "geo"); });
+    all.select("text")
+      .attr("x", d => { const a = Math.max(0, xScale(d.start)), b = Math.min(iW, xScale(d.end)); return (a + b) / 2; })
+      .attr("y", y + h / 2).attr("fill", d => contrastColor(d.color))
+      .style("font-size", h >= 40 ? "12px" : h >= 30 ? "11px" : "9px")
+      .text(d => { const nm = N(d), px = xScale(d.end) - xScale(d.start); if (px < 28) return ""; if (px < 55) return nm.slice(0, 4); if (px < 90) return nm.length > 10 ? nm.slice(0, 9) + "…" : nm; return nm; });
+    sel.exit().remove();
+  }
+
+  function renderExtinctions() {
+    const exts = KEY_EVENTS.filter(d => d.type === "extinction");
+    const bw = Math.max(4, Math.min(40, 6 * Math.sqrt(curT.k)));
+    const sel = gExtinct.selectAll(".extinction-band").data(exts, d => d.name);
+    sel.enter().append("rect").attr("class", "extinction-band").merge(sel)
+      .attr("x", d => xScale(d.date) - bw / 2).attr("y", 0).attr("width", bw).attr("height", AXIS_Y)
+      .attr("fill", "#FF1744").attr("opacity", d => (d.severity || 50) / 100 * 0.28).attr("rx", bw / 3).attr("filter", "url(#glow)")
+      .on("mouseover", (ev, d) => showTT(ev, d, "event")).on("mousemove", moveTT).on("mouseout", hideTT)
+      .on("click", (ev, d) => { ev.stopPropagation(); showPanel(d, "event"); });
+    sel.exit().remove();
+  }
+
+  const majorEventNames = new Set(["Formation of Earth", "Origin of Life", "Great Oxidation Event", "Cambrian Explosion", "First Dinosaurs", "Homo Sapiens", "First Eukaryotes", "First Animals"]);
+
+  function renderEvents() {
+    const k = curT.k;
+    const visible = KEY_EVENTS.filter(d => { if (d.type === "extinction") return false; if (majorEventNames.has(d.name)) return true; return k >= 2; });
+    const positions = [];
+    visible.forEach(d => { const px = xScale(d.date); let row = 0; while (positions.some(p => p.row === row && Math.abs(p.px - px) < 95)) row++; positions.push({ px, row }); d._row = row; });
+
+    const sel = gEvtG.selectAll(".event-marker").data(visible, d => d.name);
+    const ent = sel.enter().append("g").attr("class", "event-marker");
+    ent.append("line").attr("class", "event-line"); ent.append("circle").attr("class", "event-dot"); ent.append("text").attr("class", "event-text");
+    const all = ent.merge(sel);
+    const ecol = d => d.type === "origin" ? "#00E676" : "#FF9100";
+    all.attr("transform", d => `translate(${xScale(d.date)},0)`);
+    all.select(".event-line").attr("y1", EVT_Y).attr("y2", EVT_Y + EVT_H * 0.7).attr("stroke", ecol).attr("opacity", 0.3);
+    all.select(".event-dot").attr("cy", EVT_Y).attr("r", d => majorEventNames.has(d.name) ? 5 : 3.5).attr("fill", ecol).attr("stroke", "#0a0e17").attr("stroke-width", 1.5);
+    all.select(".event-text").attr("x", 6).attr("y", d => EVT_Y + 14 + d._row * 15).attr("fill", ecol)
+      .attr("font-size", k > 10 ? "11px" : "10px").attr("opacity", d => majorEventNames.has(d.name) ? 0.9 : 0.7)
+      .text(d => { const nm = N(d), len = k > 10 ? 30 : k > 3 ? 22 : 16; return nm.length > len ? nm.slice(0, len - 1) + "…" : nm; });
+    all.on("mouseover", (ev, d) => showTT(ev, d, "event")).on("mousemove", moveTT).on("mouseout", hideTT)
+      .on("click", (ev, d) => { ev.stopPropagation(); showPanel(d, "event"); });
+    sel.exit().remove();
+  }
+
+  function renderSpecies() {
+    const k = curT.k;
+    const sel = gSpG.selectAll(".sp-group").data(speciesArr, d => d.name);
+    const ent = sel.enter().append("g").attr("class", "sp-group");
+    ent.append("rect").attr("class", "species-bar"); ent.append("text").attr("class", "species-label");
+    const all = ent.merge(sel);
+    all.select("rect").attr("x", d => xScale(d.start)).attr("y", d => SP_Y + d._lane * (SP_LANE + SP_GAP))
+      .attr("width", d => Math.max(2, xScale(d.end) - xScale(d.start))).attr("height", SP_LANE)
+      .attr("fill", d => d.color).attr("opacity", 0.7).attr("stroke", "rgba(255,255,255,0.08)").attr("stroke-width", 0.5);
+    all.select("text").attr("x", d => Math.max(2, xScale(d.start)) + 5).attr("y", d => SP_Y + d._lane * (SP_LANE + SP_GAP) + SP_LANE / 2)
+      .text(d => { const nm = N(d), px = xScale(d.end) - xScale(d.start); if (px < 35) return ""; if (px < 70) return nm.slice(0, 6) + (nm.length > 6 ? "…" : ""); return nm; })
+      .attr("opacity", k > 3 ? 0.9 : 0.6);
+    all.on("mouseover", (ev, d) => showTT(ev, d, "species")).on("mousemove", moveTT).on("mouseout", hideTT)
+      .on("click", (ev, d) => { ev.stopPropagation(); showPanel(d, "species"); });
+    sel.exit().remove();
+  }
+
+  function renderYAH() {
+    gMarker.selectAll("*").remove();
+    const grp = gMarker.append("g").attr("class", "yah").attr("transform", `translate(${xScale(0)},0)`);
+    grp.append("circle").attr("class", "you-are-here-pulse").attr("cy", EON_H / 2);
+    grp.append("circle").attr("cy", EON_H / 2).attr("r", 5).attr("fill", "#4fc3f7");
+    grp.append("text").attr("y", -6).attr("text-anchor", "end").attr("fill", "#4fc3f7")
+      .attr("font-size", "10px").attr("font-weight", "700").text(t("youAreHere"));
+  }
+
+  function renderAxis() {
+    const vl = xScale.invert(0), vr = xScale.invert(iW);
+    const lin = d3.scaleLinear().domain([vl, vr]).range([0, iW]);
+    gAxisG.call(d3.axisBottom(lin).tickFormat(d => formatMa(Math.abs(d))).ticks(Math.min(14, Math.max(4, Math.floor(iW / 110)))));
+    gAxisG.selectAll("text").attr("fill", "#506070");
+    gAxisG.selectAll("line, path").attr("stroke", "#1e2a38");
+  }
+
+  function renderGrid() {
+    const vl = xScale.invert(0), vr = xScale.invert(iW);
+    const lin = d3.scaleLinear().domain([vl, vr]).range([0, iW]);
+    const ticks = lin.ticks(Math.min(14, Math.floor(iW / 110)));
+    const sel = gGrid.selectAll(".grid-line").data(ticks, d => d);
+    sel.enter().append("line").attr("class", "grid-line").merge(sel)
+      .attr("x1", d => lin(d)).attr("x2", d => lin(d)).attr("y1", 0).attr("y2", AXIS_Y).attr("stroke", "#111822").attr("stroke-width", 0.5);
+    sel.exit().remove();
+  }
+
+  function updateAll() {
+    const k = curT.k;
+    renderGeo(gEonG, eons, EON_Y, EON_H, "eon-g");
+    renderGeo(gEraG, eras, ERA_Y, ERA_H, "era-g");
+    if (k >= 2) renderGeo(gPerG, periods, PER_Y, PER_H, "per-g"); else gPerG.selectAll("*").remove();
+    renderGrid(); renderExtinctions(); renderEvents(); renderSpecies(); renderYAH(); renderAxis(); updateCtx();
+  }
+
+  /* ── Zoom ── */
+  const zoom = d3.zoom().scaleExtent([1, 100000]).translateExtent([[0, -10], [iW, iH + 10]]).extent([[0, 0], [iW, iH]])
+    .on("zoom", ev => { curT = ev.transform; xScale = curT.rescaleX(xBase); updateAll(); annotation.classList.toggle("hidden", curT.k > 1.3); if (curT.k > 1.1) kbHint.style.opacity = "0"; });
+  svg.call(zoom);
+  svg.on("click", closePanel);
+
+  function zoomTo(s, e, dur = 750) {
+    const x0 = xBase(s), x1 = xBase(e), rw = x1 - x0; if (rw <= 0) return;
+    const pad = iW * 0.04, sc = (iW - 2 * pad) / rw, tx = -x0 * sc + pad;
+    svg.transition().duration(dur).call(zoom.transform, d3.zoomIdentity.translate(tx, 0).scale(sc));
+  }
+
+  /* ── Tooltip ── */
+  function showTT(ev, d, type) {
+    tooltip.querySelector(".tt-title").textContent = N(d);
+    if (type === "geo" || type === "species") {
+      tooltip.querySelector(".tt-date").textContent = `${formatMa(d.start)} → ${formatMa(d.end)} (${formatDuration(d.start, d.end)})`;
+    } else {
+      let s = formatMa(d.date); if (d.severity) s += ` | ${d.severity}% ${t("speciesLost")}`; tooltip.querySelector(".tt-date").textContent = s;
+    }
+    tooltip.querySelector(".tt-desc").textContent = Desc(d);
+    tooltip.classList.add("visible"); moveTT(ev);
+  }
+  function moveTT(ev) {
+    let x = ev.clientX + 14, y = ev.clientY - 8;
+    if (x + tooltip.offsetWidth > window.innerWidth) x = ev.clientX - tooltip.offsetWidth - 10;
+    if (y + tooltip.offsetHeight > window.innerHeight) y = ev.clientY - tooltip.offsetHeight - 10;
+    tooltip.style.left = x + "px"; tooltip.style.top = y + "px";
+  }
+  function hideTT() { tooltip.classList.remove("visible"); }
+
+  /* ── Info panel ── */
+  function showPanel(d, type) {
+    const p = infoPanel;
+    p.querySelector(".panel-title").textContent = N(d);
+    if (type === "geo" || type === "species") {
+      p.querySelector(".panel-dates").textContent = `${formatMa(d.start)} → ${formatMa(d.end)}`;
+      p.querySelector(".panel-duration").textContent = `${t("duration")}: ${formatDuration(d.start, d.end)}`;
+      p.querySelector(".panel-perspective").innerHTML = `<strong>${t("clock24")}:</strong> ${t("clockSpan")} <strong>${to24Hour(d.start)}</strong> ${t("to")} <strong>${to24Hour(d.end)}</strong>.`;
+    } else {
+      p.querySelector(".panel-dates").textContent = formatMa(d.date);
+      p.querySelector(".panel-duration").textContent = d.severity ? `${t("severity")}: ~${d.severity}% ${t("speciesLost")}` : "";
+      p.querySelector(".panel-perspective").innerHTML = `<strong>${t("clock24")}:</strong> ${t("clockAt")} <strong>${to24Hour(d.date)}</strong>.`;
+    }
+    p.querySelector(".panel-desc").textContent = Desc(d);
+    const link = p.querySelector(".panel-link");
+    const url = Wiki(d);
+    if (url) { link.href = url; link.style.display = ""; link.innerHTML = t("wikiLink"); } else link.style.display = "none";
+    p.classList.add("open");
+  }
+  function closePanel() { infoPanel.classList.remove("open"); }
+  infoPanel.querySelector(".panel-close").addEventListener("click", e => { e.stopPropagation(); closePanel(); });
+
+  /* ── Context indicator ── */
+  function updateCtx() {
+    const mid = xScale.invert(iW / 2), k = curT.k;
+    let ctx = t("fullTimeline"), range = `4.54 ${t("ga")} – ${t("present")}`;
+    if (k >= 3) { const p = periods.find(p => mid <= p.start && mid >= p.end); if (p) { ctx = N(p); range = `${formatMa(p.start)} – ${formatMa(p.end)}`; } }
+    if (ctx === t("fullTimeline") && k >= 1.5) { const e = eras.find(e => mid <= e.start && mid >= e.end); if (e) { ctx = N(e); range = `${formatMa(e.start)} – ${formatMa(e.end)}`; } }
+    if (ctx === t("fullTimeline")) { const e = eons.find(e => mid <= e.start && mid >= e.end); if (e) { ctx = N(e); range = `${formatMa(e.start)} – ${formatMa(e.end)}`; } }
+    document.getElementById("context-indicator").innerHTML = `${t("viewing")}: <span>${ctx}</span> | ${range}`;
+    document.querySelectorAll(".nav-btn[data-eon]").forEach(btn => {
+      const eon = eons.find(e => e.name === btn.dataset.eon); if (!eon) return;
+      const vis = xScale(eon.start) < iW && xScale(eon.end) > 0;
+      btn.classList.toggle("active", k > 1.3 && vis && (xScale(eon.end) - xScale(eon.start)) > iW * 0.35);
+    });
+  }
+
+  /* ── Update UI text for current language ── */
+  function updateLangUI() {
+    document.title = LANG === "ru" ? "История жизни на Земле" : "History of Life on Earth";
+    document.getElementById("nav-title").textContent = t("title");
+    document.getElementById("btn-hadean").textContent = t("hadean");
+    document.getElementById("btn-archean").textContent = t("archean");
+    document.getElementById("btn-proterozoic").textContent = t("proterozoic");
+    document.getElementById("btn-phanerozoic").textContent = t("phanerozoic");
+    document.getElementById("btn-reset").textContent = t("reset");
+    document.getElementById("btn-lang").textContent = LANG === "en" ? "RU" : "EN";
+    annotation.innerHTML = t("annotation");
+    infoPanel.querySelector(".panel-link").innerHTML = t("wikiLink");
+    updateAll();
+  }
+
+  /* ── Nav buttons ── */
+  document.querySelectorAll(".nav-btn[data-eon]").forEach(btn => {
+    btn.addEventListener("click", () => { const eon = eons.find(e => e.name === btn.dataset.eon); if (eon) zoomTo(eon.start, eon.end); });
+  });
+  document.getElementById("btn-reset").addEventListener("click", () => { svg.transition().duration(750).call(zoom.transform, d3.zoomIdentity); closePanel(); });
+
+  /* ── Language toggle ── */
+  document.getElementById("btn-lang").addEventListener("click", () => {
+    LANG = LANG === "en" ? "ru" : "en";
+    updateLangUI();
+  });
+
+  /* ── Keyboard ── */
+  document.addEventListener("keydown", e => {
+    const pan = iW * 0.15;
+    switch (e.key) {
+      case "+": case "=": svg.transition().duration(300).call(zoom.scaleBy, 2); break;
+      case "-": case "_": svg.transition().duration(300).call(zoom.scaleBy, 0.5); break;
+      case "ArrowLeft": svg.transition().duration(200).call(zoom.translateBy, pan, 0); break;
+      case "ArrowRight": svg.transition().duration(200).call(zoom.translateBy, -pan, 0); break;
+      case "Home": svg.transition().duration(750).call(zoom.transform, d3.zoomIdentity); closePanel(); break;
+      case "1": { const x = eons.find(e => e.name==="Hadean"); if (x) zoomTo(x.start, x.end); break; }
+      case "2": { const x = eons.find(e => e.name==="Archean"); if (x) zoomTo(x.start, x.end); break; }
+      case "3": { const x = eons.find(e => e.name==="Proterozoic"); if (x) zoomTo(x.start, x.end); break; }
+      case "4": { const x = eons.find(e => e.name==="Phanerozoic"); if (x) zoomTo(x.start, x.end); break; }
+      case "Escape": closePanel(); break;
+    }
+  });
+
+  /* ── Resize ── */
+  window.addEventListener("resize", () => {
+    dims(); svg.attr("width", W).attr("height", H); xBase.range([0, iW]);
+    svg.select("#clip rect").attr("width", iW).attr("height", iH + margin.top + margin.bottom);
+    gAxisG.attr("transform", `translate(0,${AXIS_Y})`);
+    zoom.translateExtent([[0, -10], [iW, iH + 10]]).extent([[0, 0], [iW, iH]]);
+    xScale = curT.rescaleX(xBase); updateAll();
+  });
+
+  /* ── Init ── */
+  updateLangUI();
+})();
+</script>
+</body>
+</html>
