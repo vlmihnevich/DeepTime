@@ -32,11 +32,17 @@ The project uses Vite for building and development:
 
 ## 📦 Deployment (GitHub Pages)
 
-The project is ideal for GitHub Pages. To publish it:
+The project is configured for automatic deployment via GitHub Actions.
 
-1. Add `base: './'` to your `vite.config.ts`.
-2. Run `npm run build`.
-3. Upload the `dist/index.html` file to the repository or set up GitHub Actions for automatic deployment.
+To enable deployment:
+1. Push your changes to the `main` branch.
+2. Go to your GitHub repository **Settings** > **Pages**.
+3. Under **Build and deployment** > **Source**, select **GitHub Actions**.
+4. The site will be automatically built and deployed whenever you push to `main`.
+
+Manual deployment:
+- Run `npm run build`.
+- The single-file build will be in `dist/index.html`. You can manually upload this file to any static hosting.
 
 ## 🛠 Data
 
