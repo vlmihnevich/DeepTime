@@ -45,7 +45,9 @@ export class Events {
       .filter((d) => {
         if (d.type === "extinction") return false;
         if (MAJOR_EVENT_NAMES.has(d.name)) return true;
-        return k >= 2;
+        // Human events are very dense, so we require higher zoom
+        if (d.type === "human") return k >= 8; 
+        return k >= 2.5;
       })
       .map((d) => ({ ...d, _row: 0 }));
 
@@ -53,7 +55,8 @@ export class Events {
     visible.forEach((d) => {
       const px = ctx.xScale(d.date);
       let row = 0;
-      while (positions.some((p) => p.row === row && Math.abs(p.px - px) < 95)) row++;
+      // Increased threshold for larger fonts and long labels
+      while (positions.some((p) => p.row === row && Math.abs(p.px - px) < 140)) row++;
       positions.push({ px, row });
       d._row = row;
     });
@@ -85,16 +88,21 @@ export class Events {
       .attr("cy", this.evtY).attr("r", (d) => (MAJOR_EVENT_NAMES.has(d.name) ? 5 : 3.5))
       .attr("fill", ecol).attr("stroke", "var(--bg-deep)").attr("stroke-width", 1.5);
     all.select<SVGTextElement>(".event-text")
-      .attr("x", 0).attr("y", (d) => this.evtY - 8 - d._row * 18)
-      .attr("text-anchor", "middle")
+      .attr("x", 0).attr("y", (d) => this.evtY - 10 - d._row * 22)
+      .attr("text-anchor", (d) => {
+        const px = ctx.xScale(d.date);
+        if (px < 60) return "start";
+        if (px > ctx.iW - 60) return "end";
+        return "middle";
+      })
       .attr("fill", ecol)
       .attr("font-size", "16px")
       .attr("font-weight", "600")
-      .attr("opacity", (d) => (MAJOR_EVENT_NAMES.has(d.name) ? 0.9 : 0.7))
+      .attr("opacity", (d) => (MAJOR_EVENT_NAMES.has(d.name) ? 0.95 : 0.75))
       .text((d) => {
         const nm = N(d);
-        const len = k > 10 ? 30 : k > 3 ? 22 : 16;
-        return nm.length > len ? nm.slice(0, len - 1) + "\u2026" : nm;
+        const maxLen = k > 20 ? 40 : k > 5 ? 25 : 18;
+        return nm.length > maxLen ? nm.slice(0, maxLen - 1) + "\u2026" : nm;
       });
 
     sel.exit().remove();
