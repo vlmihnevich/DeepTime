@@ -539,3 +539,73 @@ body {
   background: var(--accent-dim);
   border-radius: 0.1875rem;
 }
+
+/* ═══════════════════════════════════════
+   Responsive Design
+   ═══════════════════════════════════════ */
+@media (max-width: 768px) {
+  :root {
+    --fs-display: 1.25rem;
+    --fs-title: 1.125rem;
+    --fs-lead: 1rem;
+    --fs-base: 0.9375rem;
+    --fs-small: 0.8125rem;
+  }
+
+  #nav-bar {
+    padding: 0 0.75rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    /* Firefox */
+  }
+
+  #nav-bar::-webkit-scrollbar {
+    display: none;
+    /* Chrome/Safari */
+  }
+
+  .nav-title {
+    display: none;
+  }
+
+  #context-indicator {
+    display: none;
+  }
+
+  #keyboard-hint {
+    display: none;
+  }
+
+  #opening-annotation {
+    width: calc(100% - 2rem);
+    padding: 1rem 1.25rem;
+    bottom: 1.25rem;
+  }
+
+  #info-panel {
+    max-height: 85vh;
+    padding: 1.25rem 1.5rem;
+  }
+
+  .panel-header {
+    margin-bottom: 0.75rem;
+  }
+
+  .panel-desc {
+    font-size: var(--fs-base);
+  }
+
+  .panel-perspective {
+    padding: 0.625rem 0.875rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-btn:not(.reset-btn):not(.lang-btn) {
+    display: none;
+  }
+
+  .nav-btn.reset-btn {
+    margin-left: auto;
+  }
+}

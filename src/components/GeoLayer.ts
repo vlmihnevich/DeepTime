@@ -29,6 +29,11 @@ export class GeoLayer {
     this.cls = cls;
   }
 
+  updateParams(y: number, h: number): void {
+    this.y = y;
+    this.h = h;
+  }
+
   render(ctx: RenderContext): void {
     const { xScale } = ctx;
     const iW = ctx.iW;

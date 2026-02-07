@@ -30,6 +30,12 @@ export class SpeciesBars {
     this.spGap = spGap;
   }
 
+  updateParams(spY: number, spLane: number, spGap: number): void {
+    this.spY = spY;
+    this.spLane = spLane;
+    this.spGap = spGap;
+  }
+
   render(ctx: RenderContext): void {
     const sel = this.g.selectAll<SVGGElement, Species>(".sp-group").data(this.data, (d) => d.name);
     const ent = sel.enter().append("g").attr("class", "sp-group")

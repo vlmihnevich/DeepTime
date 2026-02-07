@@ -17,9 +17,7 @@ import { NavBar } from "./NavBar";
 import { t, getLang } from "../i18n";
 
 const MARGIN = { top: 16, right: 30, bottom: 40, left: 30 };
-const EON_H = 50, ERA_H = 34, PER_H = 26, GAP = 3;
-const EON_Y = 0, ERA_Y = EON_H + GAP, PER_Y = ERA_Y + ERA_H + GAP;
-const SP_LANE = 28, SP_GAP = 4;
+const MOBILE_MARGIN = { top: 12, right: 15, bottom: 30, left: 15 };
 
 export class Timeline {
   private container: HTMLElement;
@@ -31,11 +29,20 @@ export class Timeline {
   private zoom!: d3.ZoomBehavior<SVGSVGElement, unknown>;
   private W = 0; private H = 0; private iW = 0; private iH = 0;
 
+  // Layout constants
+  private EON_H = 50;
+  private ERA_H = 34;
+  private PER_H = 26;
+  private GAP = 3;
+  private SP_LANE = 28;
+  private SP_GAP = 4;
+
   private eons: GeoItem[];
   private eras: GeoItem[];
   private periods: GeoItem[];
   private speciesArr: Species[];
 
+  private eonY = 0; private eraY = 0; private perY = 0;
   private evtY = 0; private evtH = 0; private spY = 0; private axisY = 0;
 
   private grid!: Grid;
@@ -91,18 +98,45 @@ export class Timeline {
     const r = this.container.getBoundingClientRect();
     this.W = r.width;
     this.H = r.height;
-    this.iW = this.W - MARGIN.left - MARGIN.right;
-    this.iH = this.H - MARGIN.top - MARGIN.bottom;
+    
+    const isMobile = this.W < 768;
+    const m = isMobile ? MOBILE_MARGIN : MARGIN;
+    
+    this.iW = this.W - m.left - m.right;
+    this.iH = this.H - m.top - m.bottom;
+
+    // Adjust layout for mobile
+    if (isMobile) {
+      this.EON_H = 40;
+      this.ERA_H = 28;
+      this.PER_H = 22;
+      this.SP_LANE = 22;
+      this.SP_GAP = 3;
+    } else {
+      this.EON_H = 50;
+      this.ERA_H = 34;
+      this.PER_H = 26;
+      this.SP_LANE = 28;
+      this.SP_GAP = 4;
+    }
+
+    if (this.g) {
+      this.g.attr("transform", `translate(${m.left},${m.top})`);
+    }
   }
 
   private computeLayout(): void {
-    this.spY = PER_Y + PER_H + 10;
+    this.eonY = 0;
+    this.eraY = this.eonY + this.EON_H + this.GAP;
+    this.perY = this.eraY + this.ERA_H + this.GAP;
+    
+    this.spY = this.perY + this.PER_H + 10;
     const maxLane = this.speciesArr.reduce((m, s) => Math.max(m, s._lane || 0), 0);
-    const spBottom = this.spY + (maxLane + 1) * (SP_LANE + SP_GAP);
+    const spBottom = this.spY + (maxLane + 1) * (this.SP_LANE + this.SP_GAP);
     this.axisY = this.iH - 12;
     // Фиксируем базовую линию событий в 50px от нижней оси
-    this.evtY = this.axisY - 50;
-    this.evtH = 50;
+    this.evtY = this.axisY - (this.W < 768 ? 40 : 50);
+    this.evtH = this.W < 768 ? 40 : 50;
   }
 
   private init(): void {
@@ -155,12 +189,12 @@ export class Timeline {
     // Order matters for SVG layering
     this.grid = new Grid(this.g, this.axisY);
     this.extinctions = new Extinctions(this.g, KEY_EVENTS, this.axisY, showEvtTT, moveTT, hideTT, focusEvt); // Вымирания пока на dblclick
-    this.eonLayer = new GeoLayer(this.g, this.eons, EON_Y, EON_H, "eon-g", showGeoTT, moveTT, hideTT, focusGeo, selectGeo);
-    this.eraLayer = new GeoLayer(this.g, this.eras, ERA_Y, ERA_H, "era-g", showGeoTT, moveTT, hideTT, focusGeo, selectGeo);
-    this.perLayer = new GeoLayer(this.g, this.periods, PER_Y, PER_H, "per-g", showGeoTT, moveTT, hideTT, focusGeo, selectGeo);
-    this.speciesBars = new SpeciesBars(this.g, this.speciesArr, this.spY, SP_LANE, SP_GAP, showSpTT, moveTT, hideTT, focusSp, selectSp);
+    this.eonLayer = new GeoLayer(this.g, this.eons, this.eonY, this.EON_H, "eon-g", showGeoTT, moveTT, hideTT, focusGeo, selectGeo);
+    this.eraLayer = new GeoLayer(this.g, this.eras, this.eraY, this.ERA_H, "era-g", showGeoTT, moveTT, hideTT, focusGeo, selectGeo);
+    this.perLayer = new GeoLayer(this.g, this.periods, this.perY, this.PER_H, "per-g", showGeoTT, moveTT, hideTT, focusGeo, selectGeo);
+    this.speciesBars = new SpeciesBars(this.g, this.speciesArr, this.spY, this.SP_LANE, this.SP_GAP, showSpTT, moveTT, hideTT, focusSp, selectSp);
     this.events = new Events(this.g, KEY_EVENTS, this.evtY, this.axisY, showEvtTT, moveTT, hideTT, focusEvt, selectEvt);
-    this.youAreHere = new YouAreHere(this.g, EON_H);
+    this.youAreHere = new YouAreHere(this.g, this.EON_H);
     this.axis = new Axis(this.g, this.axisY);
 
     this.zoom = d3.zoom<SVGSVGElement, unknown>()
@@ -274,7 +308,12 @@ export class Timeline {
       this.axis.updateY(this.axisY);
       this.grid.updateY(this.axisY);
       this.extinctions.updateY(this.axisY);
+      this.eonLayer.updateParams(this.eonY, this.EON_H);
+      this.eraLayer.updateParams(this.eraY, this.ERA_H);
+      this.perLayer.updateParams(this.perY, this.PER_H);
       this.events.updateY(this.evtY, this.axisY);
+      this.speciesBars.updateParams(this.spY, this.SP_LANE, this.SP_GAP);
+      this.youAreHere.updateY(this.EON_H);
       this.zoom
         .translateExtent([[0, -10], [this.iW, this.iH + 10]])
         .extent([[0, 0], [this.iW, this.iH]]);
