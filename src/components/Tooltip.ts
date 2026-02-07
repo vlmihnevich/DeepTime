@@ -21,6 +21,7 @@ export class Tooltip {
   }
 
   show(ev: MouseEvent, d: TooltipItem, type: TooltipType): void {
+    if (window.innerWidth < 768) return;
     this.ttTitle.textContent = N(d);
     if (type === "geo" || type === "species") {
       const item = d as GeoItem | Species;
@@ -39,6 +40,7 @@ export class Tooltip {
   }
 
   move(ev: MouseEvent): void {
+    if (window.innerWidth < 768) return;
     let x = ev.clientX + 14;
     let y = ev.clientY - 8;
     if (x + this.el.offsetWidth > window.innerWidth) x = ev.clientX - this.el.offsetWidth - 10;
