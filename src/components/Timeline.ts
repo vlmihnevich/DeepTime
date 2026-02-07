@@ -100,9 +100,9 @@ export class Timeline {
     const maxLane = this.speciesArr.reduce((m, s) => Math.max(m, s._lane || 0), 0);
     const spBottom = this.spY + (maxLane + 1) * (SP_LANE + SP_GAP);
     this.axisY = this.iH - 12;
-    // Оставляем больше места под событиями, сдвигая базовую линию вниз
-    this.evtY = Math.min(this.axisY - 40, Math.round(spBottom + 45));
-    this.evtH = this.axisY - this.evtY;
+    // Фиксируем базовую линию событий в 50px от нижней оси
+    this.evtY = this.axisY - 50;
+    this.evtH = 50;
   }
 
   private init(): void {
