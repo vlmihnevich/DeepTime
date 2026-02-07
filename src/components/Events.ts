@@ -26,7 +26,8 @@ export class Events {
     private onHover: (ev: MouseEvent, d: KeyEvent) => void,
     private onMove: (ev: MouseEvent) => void,
     private onLeave: () => void,
-    private onClick: (ev: MouseEvent, d: KeyEvent) => void,
+    private onFocus: (ev: MouseEvent, d: KeyEvent) => void,
+    private onSelect: (ev: MouseEvent, d: KeyEvent) => void,
   ) {
     this.g = parent.append("g");
     this.data = data;
@@ -46,7 +47,7 @@ export class Events {
         if (d.type === "extinction") return false;
         if (MAJOR_EVENT_NAMES.has(d.name)) return true;
         // Human events are extremely dense, keep them hidden longer
-        if (d.type === "human") return k >= 80;
+        if (d.type === "human") return k >= 80; 
         return k >= 5;
       })
       .map((d) => ({ ...d, _row: 0 }));
@@ -83,9 +84,13 @@ export class Events {
       .on("mouseover", (ev: MouseEvent, d: EvtWithRow) => this.onHover(ev, d))
       .on("mousemove", (ev: MouseEvent) => this.onMove(ev))
       .on("mouseout", () => this.onLeave())
+      .on("click", (ev: MouseEvent, d: EvtWithRow) => {
+        ev.stopPropagation();
+        this.onSelect(ev, d);
+      })
       .on("dblclick", (ev: MouseEvent, d: EvtWithRow) => {
         ev.stopPropagation();
-        this.onClick(ev, d);
+        this.onFocus(ev, d);
       });
     ent.append("line").attr("class", "event-line");
     ent.append("circle").attr("class", "event-dot");

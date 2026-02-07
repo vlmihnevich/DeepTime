@@ -129,28 +129,37 @@ export class Timeline {
     const showGeoTT = (ev: MouseEvent, d: GeoItem) => this.tooltip.show(ev, d, "geo");
     const moveTT = (ev: MouseEvent) => this.tooltip.move(ev);
     const hideTT = () => this.tooltip.hide();
-    const clickGeo = (_ev: MouseEvent, d: GeoItem) => {
+    
+    // Одинарный клик - только инфо
+    const selectGeo = (_ev: MouseEvent, d: GeoItem) => this.infoPanel.show(d, "geo");
+    // Двойной клик - инфо + зум
+    const focusGeo = (_ev: MouseEvent, d: GeoItem) => {
       this.zoomTo(d.start, d.end);
       this.infoPanel.show(d, "geo");
     };
 
     const showEvtTT = (ev: MouseEvent, d: KeyEvent) => this.tooltip.show(ev, d, "event");
-    const clickEvt = (_ev: MouseEvent, d: KeyEvent) => this.infoPanel.show(d, "event");
+    const selectEvt = (_ev: MouseEvent, d: KeyEvent) => this.infoPanel.show(d, "event");
+    const focusEvt = (_ev: MouseEvent, d: KeyEvent) => {
+      this.zoomTo(d.date - 10, d.date + 10); // Небольшой фокус на событии
+      this.infoPanel.show(d, "event");
+    };
 
     const showSpTT = (ev: MouseEvent, d: Species) => this.tooltip.show(ev, d, "species");
-    const clickSp = (_ev: MouseEvent, d: Species) => {
+    const selectSp = (_ev: MouseEvent, d: Species) => this.infoPanel.show(d, "species");
+    const focusSp = (_ev: MouseEvent, d: Species) => {
       this.zoomTo(d.start, d.end);
       this.infoPanel.show(d, "species");
     };
 
     // Order matters for SVG layering
     this.grid = new Grid(this.g, this.axisY);
-    this.extinctions = new Extinctions(this.g, KEY_EVENTS, this.axisY, showEvtTT, moveTT, hideTT, clickEvt);
-    this.eonLayer = new GeoLayer(this.g, this.eons, EON_Y, EON_H, "eon-g", showGeoTT, moveTT, hideTT, clickGeo);
-    this.eraLayer = new GeoLayer(this.g, this.eras, ERA_Y, ERA_H, "era-g", showGeoTT, moveTT, hideTT, clickGeo);
-    this.perLayer = new GeoLayer(this.g, this.periods, PER_Y, PER_H, "per-g", showGeoTT, moveTT, hideTT, clickGeo);
-    this.speciesBars = new SpeciesBars(this.g, this.speciesArr, this.spY, SP_LANE, SP_GAP, showSpTT, moveTT, hideTT, clickSp);
-    this.events = new Events(this.g, KEY_EVENTS, this.evtY, this.axisY, showEvtTT, moveTT, hideTT, clickEvt);
+    this.extinctions = new Extinctions(this.g, KEY_EVENTS, this.axisY, showEvtTT, moveTT, hideTT, focusEvt); // Вымирания пока на dblclick
+    this.eonLayer = new GeoLayer(this.g, this.eons, EON_Y, EON_H, "eon-g", showGeoTT, moveTT, hideTT, focusGeo, selectGeo);
+    this.eraLayer = new GeoLayer(this.g, this.eras, ERA_Y, ERA_H, "era-g", showGeoTT, moveTT, hideTT, focusGeo, selectGeo);
+    this.perLayer = new GeoLayer(this.g, this.periods, PER_Y, PER_H, "per-g", showGeoTT, moveTT, hideTT, focusGeo, selectGeo);
+    this.speciesBars = new SpeciesBars(this.g, this.speciesArr, this.spY, SP_LANE, SP_GAP, showSpTT, moveTT, hideTT, focusSp, selectSp);
+    this.events = new Events(this.g, KEY_EVENTS, this.evtY, this.axisY, showEvtTT, moveTT, hideTT, focusEvt, selectEvt);
     this.youAreHere = new YouAreHere(this.g, EON_H);
     this.axis = new Axis(this.g, this.axisY);
 

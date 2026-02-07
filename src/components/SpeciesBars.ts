@@ -20,7 +20,8 @@ export class SpeciesBars {
     private onHover: (ev: MouseEvent, d: Species) => void,
     private onMove: (ev: MouseEvent) => void,
     private onLeave: () => void,
-    private onClick: (ev: MouseEvent, d: Species) => void,
+    private onFocus: (ev: MouseEvent, d: Species) => void,
+    private onSelect: (ev: MouseEvent, d: Species) => void,
   ) {
     this.g = parent.append("g");
     this.data = data;
@@ -35,9 +36,13 @@ export class SpeciesBars {
       .on("mouseover", (ev: MouseEvent, d: Species) => this.onHover(ev, d))
       .on("mousemove", (ev: MouseEvent) => this.onMove(ev))
       .on("mouseout", () => this.onLeave())
+      .on("click", (ev: MouseEvent, d: Species) => {
+        ev.stopPropagation();
+        this.onSelect(ev, d);
+      })
       .on("dblclick", (ev: MouseEvent, d: Species) => {
         ev.stopPropagation();
-        this.onClick(ev, d);
+        this.onFocus(ev, d);
       });
     ent.append("rect").attr("class", "species-bar");
     ent.append("text").attr("class", "species-label");

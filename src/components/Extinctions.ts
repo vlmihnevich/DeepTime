@@ -13,7 +13,7 @@ export class Extinctions {
     private onHover: (ev: MouseEvent, d: KeyEvent) => void,
     private onMove: (ev: MouseEvent) => void,
     private onLeave: () => void,
-    private onClick: (ev: MouseEvent, d: KeyEvent) => void,
+    private onFocus: (ev: MouseEvent, d: KeyEvent) => void,
   ) {
     this.g = parent.append("g");
     this.data = data.filter((d) => d.type === "extinction");
@@ -33,9 +33,13 @@ export class Extinctions {
       .on("mouseover", (ev: MouseEvent, d: KeyEvent) => this.onHover(ev, d))
       .on("mousemove", (ev: MouseEvent) => this.onMove(ev))
       .on("mouseout", () => this.onLeave())
+      .on("click", (ev: MouseEvent, d: KeyEvent) => {
+        ev.stopPropagation();
+        this.onFocus(ev, d); // Для вымираний пока оставим фокус на клике или dblclick?
+      })
       .on("dblclick", (ev: MouseEvent, d: KeyEvent) => {
         ev.stopPropagation();
-        this.onClick(ev, d);
+        this.onFocus(ev, d);
       });
     ent.merge(sel)
       .attr("x", (d) => ctx.xScale(d.date) - bw / 2)

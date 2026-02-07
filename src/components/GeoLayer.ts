@@ -19,7 +19,8 @@ export class GeoLayer {
     private onHover: (ev: MouseEvent, d: GeoItem) => void,
     private onMove: (ev: MouseEvent) => void,
     private onLeave: () => void,
-    private onClick: (ev: MouseEvent, d: GeoItem) => void,
+    private onFocus: (ev: MouseEvent, d: GeoItem) => void,
+    private onSelect: (ev: MouseEvent, d: GeoItem) => void,
   ) {
     this.g = parent.append("g");
     this.data = data;
@@ -40,9 +41,13 @@ export class GeoLayer {
       .on("mouseover", (ev: MouseEvent, d: GeoItem) => this.onHover(ev, d))
       .on("mousemove", (ev: MouseEvent) => this.onMove(ev))
       .on("mouseout", () => this.onLeave())
+      .on("click", (ev: MouseEvent, d: GeoItem) => {
+        ev.stopPropagation();
+        this.onSelect(ev, d);
+      })
       .on("dblclick", (ev: MouseEvent, d: GeoItem) => {
         ev.stopPropagation();
-        this.onClick(ev, d);
+        this.onFocus(ev, d);
       });
     const all = ent.merge(sel);
 
