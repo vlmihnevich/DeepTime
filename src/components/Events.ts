@@ -55,14 +55,19 @@ export class Events {
     visible.forEach((d) => {
       const px = ctx.xScale(d.date);
       let row = 0;
-      // Try rows in order: 0, -1, 1, -2, 2... to spread events vertically
-      const tryRows = [0, -1, 1, -2, 2, -3, 3, -4, 4, -5, 5];
-      for (const r of tryRows) {
-        if (!positions.some((p) => p.row === r && Math.abs(p.px - px) < 160)) {
+      const horizontalThreshold = 200;
+      let r = 0;
+      let found = false;
+      // Search for first available row: 0, 1, -1, 2, -2, 3, -3...
+      while (!found && Math.abs(r) < 25) {
+        if (!positions.some((p) => p.row === r && Math.abs(p.px - px) < horizontalThreshold)) {
           row = r;
-          break;
+          found = true;
+        } else {
+          if (r === 0) r = 1;
+          else if (r > 0) r = -r;
+          else r = Math.abs(r) + 1;
         }
-        row = r;
       }
       positions.push({ px, row });
       d._row = row;
@@ -95,11 +100,17 @@ export class Events {
       .attr("cy", this.evtY).attr("r", (d) => (MAJOR_EVENT_NAMES.has(d.name) ? 5 : 3.5))
       .attr("fill", ecol).attr("stroke", "var(--bg-deep)").attr("stroke-width", 1.5);
     all.select<SVGTextElement>(".event-text")
-      .attr("x", 0).attr("y", (d) => this.evtY - (d._row > 0 ? 15 : 0) + d._row * 22)
+      .attr("x", 0).attr("y", (d) => {
+        const rowGap = 26;
+        // Positive row -> goes UP (smaller Y), Negative row -> goes DOWN (larger Y)
+        // Add a small initial offset so text doesn't sit exactly on the dot
+        const offset = d._row === 0 ? -12 : (d._row > 0 ? -12 : 12);
+        return this.evtY + offset - d._row * rowGap;
+      })
       .attr("text-anchor", (d) => {
         const px = ctx.xScale(d.date);
-        if (px < 80) return "start";
-        if (px > ctx.iW - 80) return "end";
+        if (px < 100) return "start";
+        if (px > ctx.iW - 100) return "end";
         return "middle";
       })
       .attr("fill", ecol)
